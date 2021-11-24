@@ -20,7 +20,8 @@ void CCore::DestroyInst()
 	SAFE_DELETE(m_pInstance);
 }
 
-bool CCore::Init(HINSTANCE hInstance)
+bool CCore::Init(HINSTANCE hInstance,
+    int nWidth, int nHeight)
 {
     m_hInst = hInstance;
 
@@ -28,8 +29,8 @@ bool CCore::Init(HINSTANCE hInstance)
     MyRegisterClass();
 
     // 해상도 설정
-    m_tRS.nWidth = 1280;
-    m_tRS.nHeight = 720;
+    m_tRS.nWidth = nWidth;
+    m_tRS.nHeight = nHeight;
 
     // 윈도우창 생성
     Create();
@@ -91,7 +92,7 @@ ATOM CCore::MyRegisterClass()
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wcex.lpszMenuName = NULL;
-    wcex.lpszClassName = L"FroK's Engine";
+    wcex.lpszClassName = L"FroK's DirectX 3D Engine";
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_ICON1));
 
     return RegisterClassExW(&wcex);
@@ -100,8 +101,8 @@ ATOM CCore::MyRegisterClass()
 BOOL CCore::Create()
 {
     m_hWnd = CreateWindowW(
-        L"FroK's Engine",
-        L"FroK's Engine",
+        L"FroK's DirectX 3D Engine",
+        L"FroK's DirectX 3D Engine",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, 0, CW_USEDEFAULT, 0,
         nullptr, nullptr, m_hInst, nullptr);

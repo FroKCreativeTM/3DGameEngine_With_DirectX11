@@ -2,6 +2,8 @@
 
 // 게임을 총괄 및 관리
 
+#define WIN32_LEAN_AND_MEAN
+
 // C/C++ runtime header
 #include <Windows.h>
 #include <list>
@@ -12,6 +14,12 @@
 #include <string>
 #include <functional>
 #include <conio.h>
+
+// DirectX 관련 라이브러리 및 헤더
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "DirectXTK.lib")
+
+#include <d3d11.h>
 
 using namespace std;
 

@@ -19,8 +19,14 @@
     <Filter Include="01. GameEngine\00. Header">
       <UniqueIdentifier>{43834cba-6bb9-4bbe-a2c9-2d20c52ef16a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. GameEngine\01. Graphics">
+    <Filter Include="01. GameEngine\02. Graphics">
       <UniqueIdentifier>{983e231a-957e-4116-a00e-834b59d63322}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameEngine\01. Error">
+      <UniqueIdentifier>{51986809-a245-49e7-98c3-ec2e0c03e6c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameEngine\03. Input">
+      <UniqueIdentifier>{2a982b8f-0b5d-4a24-9fdd-ae47b2a54d29}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -31,7 +37,10 @@
       <Filter>01. GameEngine</Filter>
     </ClCompile>
     <ClCompile Include="GameEngine\Graphics\CGraphics.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>01. GameEngine\02. Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Input\CInput.cpp">
+      <Filter>01. GameEngine\03. Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -54,7 +63,13 @@
       <Filter>01. GameEngine\00. Header</Filter>
     </ClInclude>
     <ClInclude Include="GameEngine\Graphics\CGraphics.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>01. GameEngine\02. Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Error\CGameError.h">
+      <Filter>01. GameEngine\01. Error</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Input\CInput.h">
+      <Filter>01. GameEngine\03. Input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

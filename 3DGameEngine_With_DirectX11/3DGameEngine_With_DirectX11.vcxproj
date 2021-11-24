@@ -78,9 +78,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>C:\Users\180502\OneDrive - Chonnam National University\CSE\Game Programming\3DGameEngine_With_DirectX11\3DGameEngine_With_DirectX11\DirectXTK\Lib\x64\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\180502\OneDrive - Chonnam National University\CSE\Game Programming\3DGameEngine_With_DirectX11\3DGameEngine_With_DirectX11\DirectXTK\Inc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Users\180502\OneDrive - Chonnam National University\CSE\Game Programming\3DGameEngine_With_DirectX11\3DGameEngine_With_DirectX11\DirectXTK\Inc;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\180502\OneDrive - Chonnam National University\CSE\Game Programming\3DGameEngine_With_DirectX11\3DGameEngine_With_DirectX11\DirectXTK\Lib\x64\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -116,6 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -141,13 +146,20 @@
   <ItemGroup>
     <ClCompile Include="GameEngine\CCore.cpp" />
     <ClCompile Include="GameEngine\Graphics\CGraphics.cpp" />
+    <ClCompile Include="GameEngine\Input\CInput.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine\CCore.h" />
+    <ClInclude Include="GameEngine\Error\CGameError.h" />
     <ClInclude Include="GameEngine\Flag.h" />
     <ClInclude Include="GameEngine\Game.h" />
     <ClInclude Include="GameEngine\Graphics\CGraphics.h" />
+    <ClInclude Include="GameEngine\Input\CInput.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="GameEngine\Macro.h" />
     <ClInclude Include="GameEngine\resource.h" />
     <ClInclude Include="GameEngine\Types.h" />

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Game.h"
-
+#include "Graphics/CGraphics.h"
 
 // 게임의 코어
 class CCore
@@ -11,7 +11,7 @@ public:
 	static void DestroyInst();
 
 public:
-	bool Init(HINSTANCE hInstance);
+	bool Init(HINSTANCE hInstance, int nWidth = 1280, int nHeight = 720);
 	int Run();
 
 public:
@@ -34,7 +34,7 @@ public:
 	}
 
 	// 윈도우 인스턴스를 반환한다.
-	HINSTANCE GetWindowInstance() const
+	HINSTANCE GetCoreWindowInstance() const
 	{
 		return m_hInst;
 	}
