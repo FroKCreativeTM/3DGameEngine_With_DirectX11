@@ -13,5 +13,48 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="01. GameEngine">
+      <UniqueIdentifier>{f1482380-a7dd-4050-9a9f-8c0b679038a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameEngine\00. Header">
+      <UniqueIdentifier>{43834cba-6bb9-4bbe-a2c9-2d20c52ef16a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameEngine\01. Graphics">
+      <UniqueIdentifier>{983e231a-957e-4116-a00e-834b59d63322}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\CCore.cpp">
+      <Filter>01. GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Graphics\CGraphics.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameEngine\CCore.h">
+      <Filter>01. GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Game.h">
+      <Filter>01. GameEngine\00. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Macro.h">
+      <Filter>01. GameEngine\00. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Types.h">
+      <Filter>01. GameEngine\00. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Flag.h">
+      <Filter>01. GameEngine\00. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\resource.h">
+      <Filter>01. GameEngine\00. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\CGraphics.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
