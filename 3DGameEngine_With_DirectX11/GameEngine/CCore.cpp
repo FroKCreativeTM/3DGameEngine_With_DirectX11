@@ -1,4 +1,7 @@
 #include "CCore.h"
+#include "Timer/CTimer.h"
+#include "Input/CInput.h"
+#include "Path/CPathManager.h"
 
 // nullptr 선언은 여기서 가능하다.
 // 왜냐면 얘는 프로그램 시작과 생기는 인스턴스고
@@ -41,8 +44,20 @@ bool CCore::Init(HINSTANCE hInstance,
         return false;
     }
 
+    // 경로관리자 초기화
+    if (!GET_SINGLE(CPathManager)->Init())
+    {
+        return false;
+    }
+
     // 타이머(FPS, 델타타임) 초기화
     if (!GET_SINGLE(CTimer)->Init(m_hWnd))
+    {
+        return false;
+    }
+
+    // 인풋 매니저 초기화
+    if (!GET_SINGLE(CInput)->Init(m_hWnd, false))
     {
         return false;
     }
@@ -165,6 +180,7 @@ void CCore::Logic()
 
 void CCore::Input(float fDeltaTime)
 {
+    
 }
 
 int CCore::Update(float fDeltaTime)
@@ -204,7 +220,9 @@ CCore::CCore()
 
 CCore::~CCore()
 {
+    DESTROY_SINGLE(CInput);
     DESTROY_SINGLE(CTimer);
+    DESTROY_SINGLE(CPathManager);
 
     // 콘솔창 해제
 #ifdef _DEBUG

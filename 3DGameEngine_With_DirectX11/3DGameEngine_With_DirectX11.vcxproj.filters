@@ -31,6 +31,12 @@
     <Filter Include="01. GameEngine\04. Timer">
       <UniqueIdentifier>{5ef5c0c5-56d5-49ff-a551-675158544a28}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. GameEngine\02. Graphics\01. Shader">
+      <UniqueIdentifier>{2ff6802d-a8e2-4ac3-afa8-dc4cdd652617}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameEngine\05. PathManager">
+      <UniqueIdentifier>{cdb028aa-dd8f-4bb4-970a-aecb3de22ae5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -50,6 +56,12 @@
     </ClCompile>
     <ClCompile Include="GameEngine\Timer\CTimer.cpp">
       <Filter>01. GameEngine\04. Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Path\CPathManager.cpp">
+      <Filter>01. GameEngine\05. PathManager</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Graphics\Shader\CShaders.cpp">
+      <Filter>01. GameEngine\02. Graphics\01. Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,5 +98,16 @@
     <ClInclude Include="GameEngine\Timer\CTimer.h">
       <Filter>01. GameEngine\04. Timer</Filter>
     </ClInclude>
+    <ClInclude Include="GameEngine\Path\CPathManager.h">
+      <Filter>01. GameEngine\05. PathManager</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\Shader\CShaders.h">
+      <Filter>01. GameEngine\02. Graphics\01. Shader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="GameEngine\Graphics\Shader\VertexShader.hlsl">
+      <Filter>리소스 파일</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

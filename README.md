@@ -8,7 +8,7 @@ WinApiGameEngine 프로젝트 (url : https://github.com/FroKCreativeTM/WinApiGameEng
 - 윈도우 창 구현
 
 # 2021-11-25
-DirectX 11 렌더링 잡기 완료</br>
+- DirectX 11 렌더링 잡기 완료</br>
 - 알아야 할 키워드 
 </br></br>
 1. DXGI_SWAP_CHAIN_DESC - 스왑 체인(렌더링 버퍼를 관리)하기 위한 구조체 타입</br>
@@ -16,3 +16,13 @@ DirectX 11 렌더링 잡기 완료</br>
 3. Microsoft::WRL::ComPtr - 마이크로소프트의 ABI, 프로세스 간의 통신과 동적 오브젝트 생성이 가능해진다.</br>
 4. ID3D11Device - DirectX 디바이스 그 자체, 렌더링할 때 옵션 전반을 관리하는 느낌으로 보면 될 듯</br>
 5. ID3D11DeviceContext - 현재 디바이스 내 상황을 관리하기 위한 자료형 </br>
+
+- 그래픽 렌더링에 필요한 것
+1. Input 어셈블러(IA) : 첫 번째 목적은 응용 프로그램에서 제공한 정점 버퍼로부터 
+정점 데이터를 다른 파이프라인 단계에서 사용할 프리미티브로 조립하는 것</br>
+두 번째 목적은 시스템 생성 값(System-generated-Value)을 추가하는 것
+
+2. VERTEX SHADER
+3. RESTERIZER
+4. PIXEL SHADER
+5. OUTPUT MERGER

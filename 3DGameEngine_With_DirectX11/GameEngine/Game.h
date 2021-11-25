@@ -6,6 +6,8 @@
 
 // C/C++ runtime header
 #include <Windows.h>
+#include <wrl/client.h>		//  COM 객체
+#include <comdef.h>			// _com_error
 #include <list>
 #include <vector>
 #include <unordered_map>
@@ -19,9 +21,11 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "DirectXTK.lib")
 #pragma comment(lib, "DXGI.lib")
+#pragma comment(lib, "D3DCompiler.lib")
 
 #include <d3d11.h>
-#include <wrl/client.h>
+#include <DirectXMath.h>
+#include <d3dcompiler.h>
 
 using namespace std;
 
@@ -38,6 +42,7 @@ using namespace std;
 // 경로 관련 상수들
 #define ROOT_PATH		"RootPath"
 #define TEXTURE_PATH	"TexturePath"
+#define SHADER_PATH		"ShaderPath"
 #define DATA_PATH		"DataPath"
 #define SOUND_PATH		"SoundPath"
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Game.h"
-#include "Timer/CTimer.h"
 #include "Graphics/CGraphics.h"
 
 // 게임의 코어

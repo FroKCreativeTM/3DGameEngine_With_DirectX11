@@ -19,7 +19,8 @@
 #endif
 //--------------------------
 
-namespace NSInput {
+namespace NSInput 
+{
     const int KEYS_ARRAY_LEN = 256;
 
     const UCHAR KEYS_DOWN = 1;
@@ -30,9 +31,9 @@ namespace NSInput {
 }
 
 /* ============================== 게임 패드 관련 변수 ============================== */
-const short GAMEPAD_THUMBSTICK_DEADZONE = (short)(0.20f * 0X7FFF);    // default to 20% of range as deadzone
-const short GAMEPAD_TRIGGER_DEADZONE = 20;                      // trigger range 0-255
-const DWORD MAX_CONTROLLERS = 4;                                // Maximum number of controllers supported by XInput
+const short GAMEPAD_THUMBSTICK_DEADZONE = (short)(0.20f * 0X7FFF);    
+const short GAMEPAD_TRIGGER_DEADZONE = 20;                      
+const DWORD MAX_CONTROLLERS = 4;                                
 
 // Bit corresponding to gamepad button in state.Gamepad.wButtons
 const DWORD GAMEPAD_DPAD_UP = 0x0001;
@@ -63,33 +64,10 @@ struct ControllerState
 // 현재 게임 루프가 동작하는 동안 키를 누르고 있는 상태인가를 저장한다.
 class CInput
 {
-private:
-    bool m_keysDown[NSInput::KEYS_ARRAY_LEN];		// 특정 키를 누른 경우 true가 된다.
-    bool m_keysPressed[NSInput::KEYS_ARRAY_LEN];	// 게임 루프가 동작하는 동안 특정 키를 누륵 있는 경우 true가 된다.
-
-    std::string m_textIn;			// 사용자가 입력한 텍스트
-    char m_charIn;					// 마지막으로 입력한 문자.
-    bool m_newLine;					// 새로운 줄이 시작될 때 true가 된다.
-    int m_mouseX, m_mouseY;			// 화면상 마우스 데이터
-    int m_mouseRawX, m_mouseRawY;	// 고정밀 마우스 데이터
-    RAWINPUTDEVICE m_Rid[1];		// 고정밀 마우스용
-    bool m_mouseCaptured;
-    bool m_mouseLButton;
-    bool m_mouseMButton;
-    bool m_mouseRButton;
-    bool m_mouseX1Button;
-    bool m_mouseX2Button;
-    int  m_mouseWheel;
-    ControllerState m_controllers[MAX_CONTROLLERS];
-
-    short thumbstickDeadzone;
-    short triggerDeadzone;
 
 public:
-    CInput();
-    ~CInput();
 
-    void Initialize(HWND hwnd, bool capture);
+    bool Init(HWND hwnd, bool capture);
 
     /* ============================ 키보드 관련 메서드 ============================ */
     void KeyDown(WPARAM wParam);
@@ -398,7 +376,30 @@ public:
         m_controllers[n].vibrateTimeRight = sec;
     }
 
-
     void VibrateControllers(float frameTime);
+
+private :
+    bool m_keysDown[NSInput::KEYS_ARRAY_LEN];		// 특정 키를 누른 경우 true가 된다.
+    bool m_keysPressed[NSInput::KEYS_ARRAY_LEN];	// 게임 루프가 동작하는 동안 특정 키를 누륵 있는 경우 true가 된다.
+
+    std::string m_textIn;			// 사용자가 입력한 텍스트
+    char m_charIn;					// 마지막으로 입력한 문자.
+    bool m_newLine;					// 새로운 줄이 시작될 때 true가 된다.
+    int m_mouseX, m_mouseY;			// 화면상 마우스 데이터
+    int m_mouseRawX, m_mouseRawY;	// 고정밀 마우스 데이터
+    RAWINPUTDEVICE m_Rid[1];		// 고정밀 마우스용
+    bool m_mouseCaptured;
+    bool m_mouseLButton;
+    bool m_mouseMButton;
+    bool m_mouseRButton;
+    bool m_mouseX1Button;
+    bool m_mouseX2Button;
+    int  m_mouseWheel;
+    ControllerState m_controllers[MAX_CONTROLLERS];
+
+    short thumbstickDeadzone;
+    short triggerDeadzone;
+
+    DECLARE_SINGLE(CInput)
 };
 

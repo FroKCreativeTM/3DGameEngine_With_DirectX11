@@ -199,3 +199,15 @@ typedef struct _tagRectangle
 		left(0.0f), top(0.0f), right(0.0f), bottom(0.0f)
 	{}
 }RECTANGLE, * PRECTANGLE;
+
+struct Vertex
+{
+	Vertex() :
+		pos(0.0f, 0.0f) 
+	{}
+	Vertex(float x, float y) :
+		pos(x, y)
+	{}
+
+	DirectX::XMFLOAT2 pos;
+};

@@ -18,7 +18,7 @@ bool CGraphics::initD3DApp(HWND hwnd, int width, int height)
 
 	scd.BufferDesc.Width = width;
 	scd.BufferDesc.Height = height;
-	scd.BufferDesc.RefreshRate.Numerator = 60;
+	scd.BufferDesc.RefreshRate.Numerator = 144;
 	scd.BufferDesc.RefreshRate.Denominator = 1;
 	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	scd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
@@ -81,6 +81,46 @@ bool CGraphics::initD3DApp(HWND hwnd, int width, int height)
 	return true;
 }
 
+bool CGraphics::initializeShader()
+{
+	if (!m_pVertexShader.Initialize(m_pDevice, L"..\\Bin\\VertexShader.cso"))
+	{
+		return false;
+	}
+
+	D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		// 1. sementic 이름 : 셰이더의 입력 시그네처 속의 이 요소와 관련된 HLSL의 이름
+		// 2. sement idx 
+		// 3. DXGI_FORMAT : 색상 타입 등등
+		// 4. InputSlot
+		// 5. AlignedByteOffset : 말 그대로 오프셋
+		// 6. InputSlotClass : 
+		// 7. InstanceDataStepRate
+		{"POSITION", 0,
+		DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT,
+		0,0,
+		D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0}
+	};
+
+	UINT numElements = ARRAYSIZE(layout);
+
+	HRESULT hr = this->m_pDevice->CreateInputLayout(layout,
+													numElements,
+													this->m_pVertexShader.GetBuffer()->GetBufferPointer(),
+													this->m_pVertexShader.GetBuffer()->GetBufferSize(),
+													this->m_pInputLayout.GetAddressOf());
+
+	if (FAILED(hr)) 
+	{
+		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeShader() \
+				m_pDevice->CreateInputLayout()"));
+		return false;
+	}
+
+	return true;
+}
+
 CGraphics::CGraphics()
 {
 }
@@ -91,7 +131,13 @@ CGraphics::~CGraphics()
 
 bool CGraphics::Initialize(HWND hwnd, int width, int height)
 {
-	if (!initD3DApp(hwnd, width, height)) {
+	if (!initD3DApp(hwnd, width, height)) 
+	{
+		return false;
+	}
+
+	if (!initializeShader()) 
+	{
 		return false;
 	}
 

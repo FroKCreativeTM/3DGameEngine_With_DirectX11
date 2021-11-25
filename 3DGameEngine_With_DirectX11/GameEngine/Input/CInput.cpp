@@ -1,5 +1,7 @@
 #include "CInput.h"
 
+DEFINITION_SINGLE(CInput);
+
 CInput::CInput() {
 	for (size_t i = 0; i < NSInput::KEYS_ARRAY_LEN; i++) {
 		m_keysDown[i] = false;
@@ -34,7 +36,7 @@ CInput::~CInput() {
 	}
 }
 
-void CInput::Initialize(HWND hwnd, bool capture) {
+bool CInput::Init(HWND hwnd, bool capture) {
 	try {
 		m_mouseCaptured = capture;
 
@@ -55,7 +57,10 @@ void CInput::Initialize(HWND hwnd, bool capture) {
 	catch (...) {
 		throw(CGameError(NSGameError::FATAL_ERROR,
 			"Error initializing input system."));
+		return false;
 	}
+
+	return true;
 }
 
 void CInput::KeyDown(WPARAM wParam) {
