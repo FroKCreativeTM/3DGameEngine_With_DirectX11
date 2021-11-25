@@ -35,6 +35,18 @@ bool CCore::Init(HINSTANCE hInstance,
     // 윈도우창 생성
     Create();
 
+    // 그래픽 객체 생성
+    if (!m_graphics.Initialize(m_hWnd, m_tRS.nWidth, m_tRS.nHeight)) 
+    {
+        return false;
+    }
+
+    // 타이머(FPS, 델타타임) 초기화
+    if (!GET_SINGLE(CTimer)->Init(m_hWnd))
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -129,14 +141,14 @@ BOOL CCore::Create()
 void CCore::Logic()
 { 
     // 타이머 갱신
-    // GET_SINGLE(CTimer)->Update();
+    GET_SINGLE(CTimer)->Update();
 
     // 우리가 함수를 만들고 그 델타타임에 이것을 전달하면 된다.
-    // float fDeltaTime = GET_SINGLE(CTimer)->GetDeltaTime();
+    float fDeltaTime = GET_SINGLE(CTimer)->GetDeltaTime();
 
     // 입력을 받는다.
-    // Input(fDeltaTime);
-    // 
+    Input(fDeltaTime);
+    
     // if (Update(fDeltaTime) == SC_CHANGE)
     // {
     //     return; // 장면 변환이 일어난다면 
@@ -145,9 +157,10 @@ void CCore::Logic()
     // {
     //     return; // 장면 변환이 일어난다면 
     // }
-    // 
-    // Collision(fDeltaTime);
-    // Render(fDeltaTime);
+    
+    Collision(fDeltaTime);
+
+    Render(fDeltaTime);
 }
 
 void CCore::Input(float fDeltaTime)
@@ -170,6 +183,7 @@ void CCore::Collision(float fDeltaTime)
 
 void CCore::Render(float fDeltaTime)
 {
+    m_graphics.Render(fDeltaTime);
 }
 
 CCore::CCore()
@@ -190,6 +204,7 @@ CCore::CCore()
 
 CCore::~CCore()
 {
+    DESTROY_SINGLE(CTimer);
 
     // 콘솔창 해제
 #ifdef _DEBUG

@@ -28,6 +28,9 @@
     <Filter Include="01. GameEngine\03. Input">
       <UniqueIdentifier>{2a982b8f-0b5d-4a24-9fdd-ae47b2a54d29}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. GameEngine\04. Timer">
+      <UniqueIdentifier>{5ef5c0c5-56d5-49ff-a551-675158544a28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -41,6 +44,12 @@
     </ClCompile>
     <ClCompile Include="GameEngine\Input\CInput.cpp">
       <Filter>01. GameEngine\03. Input</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Graphics\CAdapterReader.cpp">
+      <Filter>01. GameEngine\02. Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Timer\CTimer.cpp">
+      <Filter>01. GameEngine\04. Timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +79,12 @@
     </ClInclude>
     <ClInclude Include="GameEngine\Input\CInput.h">
       <Filter>01. GameEngine\03. Input</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\CAdapterReader.h">
+      <Filter>01. GameEngine\02. Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Timer\CTimer.h">
+      <Filter>01. GameEngine\04. Timer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
