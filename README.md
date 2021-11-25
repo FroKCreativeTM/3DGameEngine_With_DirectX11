@@ -9,6 +9,8 @@ WinApiGameEngine 프로젝트 (url : https://github.com/FroKCreativeTM/WinApiGameEng
 
 # 2021-11-25
 - DirectX 11 렌더링 잡기 완료</br>
+- 셰이더 설정 및 PATH매니저, 그리고 Input 클래스의 싱글톤화
+
 - 알아야 할 키워드 
 </br></br>
 1. DXGI_SWAP_CHAIN_DESC - 스왑 체인(렌더링 버퍼를 관리)하기 위한 구조체 타입</br>
