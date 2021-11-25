@@ -7,7 +7,7 @@ bool CVertexShader::Initialize(Microsoft::WRL::ComPtr<ID3D11Device>& device, wst
 
     if (FAILED(hr)) 
     {
-        wstring errorMsg = L"Failed to load Shader";
+        wstring errorMsg = L"Failed to load Shader : ";
         errorMsg += shaderPath;
         throw(CGameError(NSGameError::FATAL_ERROR, hr, errorMsg));
         return false;
@@ -20,7 +20,7 @@ bool CVertexShader::Initialize(Microsoft::WRL::ComPtr<ID3D11Device>& device, wst
 
     if (FAILED(hr))
     {
-        wstring errorMsg = L"Failed to load Shader";
+        std::wstring errorMsg = L"Failed to create vertex shader: ";
         errorMsg += shaderPath;
         throw(CGameError(NSGameError::FATAL_ERROR, hr, errorMsg));
         return false;
@@ -59,6 +59,28 @@ ID3D11InputLayout* CVertexShader::GetInputLayout()
 
 bool CPixelShader::Initialize(Microsoft::WRL::ComPtr<ID3D11Device>& device, wstring shaderPath)
 {
+    HRESULT hr = D3DReadFileToBlob(shaderPath.c_str(), this->m_pShaderBuffer.GetAddressOf());
+    if (FAILED(hr))
+    {
+        wstring errorMsg = L"Failed to load Shader : ";
+        errorMsg += shaderPath;
+        throw(CGameError(NSGameError::FATAL_ERROR, hr, errorMsg));
+        return false;
+    }
+
+    hr = device->CreatePixelShader(this->m_pShaderBuffer.Get()->GetBufferPointer(), 
+        this->m_pShaderBuffer.Get()->GetBufferSize(),
+        NULL, 
+        this->m_pShader.GetAddressOf());
+
+    if (FAILED(hr))
+    {
+        std::wstring errorMsg = L"Failed to create pixel shader: ";
+        errorMsg += shaderPath;
+        throw(CGameError(NSGameError::FATAL_ERROR, hr, errorMsg));
+        return false;
+    }
+
     return true;
 }
 

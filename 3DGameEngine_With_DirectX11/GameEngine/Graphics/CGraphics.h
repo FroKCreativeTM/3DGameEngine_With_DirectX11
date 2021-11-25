@@ -15,6 +15,9 @@ private :
 	// 셰이더를 초기화 하기 위한 함수이다.
 	bool initializeShader();
 
+	// 씬을 초기화 하기 위한 함수이다.
+	bool initializeScene();
+
 public:
 	// 생성자
 	CGraphics();
@@ -36,6 +39,7 @@ private:
 	// Input Assembler(이건 Shader.h에 있는 layout이 할꺼임) (Complete)
 	// VERTEX SHADER (Complete)
 	CVertexShader												m_pVertexShader;
+	Microsoft::WRL::ComPtr<ID3D11Buffer>						m_pVertexBuffer;
 	// RESTERIZER(Complete)
 	// PIXEL SHADER(Complete)
 	CPixelShader												m_pPixelShader;

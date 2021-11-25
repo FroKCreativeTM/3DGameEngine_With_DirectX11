@@ -18,7 +18,7 @@ bool CGraphics::initD3DApp(HWND hwnd, int width, int height)
 
 	scd.BufferDesc.Width = width;
 	scd.BufferDesc.Height = height;
-	scd.BufferDesc.RefreshRate.Numerator = 144;
+	scd.BufferDesc.RefreshRate.Numerator = 60;
 	scd.BufferDesc.RefreshRate.Denominator = 1;
 	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	scd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
@@ -105,10 +105,8 @@ bool CGraphics::initializeShader()
 		// 5. AlignedByteOffset : 말 그대로 오프셋
 		// 6. InputSlotClass : 
 		// 7. InstanceDataStepRate
-		{"POSITION", 0,
-		DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT,
-		0,0,
-		D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0}
+
+		{"POSITION", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA, 0  },
 	};
 
 	UINT numElements = ARRAYSIZE(layout);
@@ -123,6 +121,42 @@ bool CGraphics::initializeShader()
 	// 픽셀 셰이더 실패시 false, 아니면 true
 	if (!m_pPixelShader.Initialize(m_pDevice, L"..\\Bin\\PixelShader.cso"))
 	{
+		return false;
+	}
+
+	return true;
+}
+
+bool CGraphics::initializeScene()
+{
+	Vertex vertices[] =
+	{
+		Vertex(0.0f, 0.0f),		// center
+		Vertex(-0.1f, 0.0f),	// left
+		Vertex(0.1f, 0.0f),		// right
+		Vertex(0.0f, 0.1f),		// top
+	};
+
+	D3D11_BUFFER_DESC vertexBufferDesc;
+	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = sizeof(Vertex) * ARRAYSIZE(vertices);
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA vertexBufferData;
+	ZeroMemory(&vertexBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
+	vertexBufferData.pSysMem = vertices;
+
+	HRESULT hr = this->m_pDevice->CreateBuffer(&vertexBufferDesc, 
+		&vertexBufferData, 
+		this->m_pVertexBuffer.GetAddressOf());
+
+	if (FAILED(hr))
+	{
+		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() m_pDevice->CreateBuffer()"));
 		return false;
 	}
 
@@ -144,7 +178,12 @@ bool CGraphics::Initialize(HWND hwnd, int width, int height)
 		return false;
 	}
 
-	if (!initializeShader()) 
+	if (!initializeShader())
+	{
+		return false;
+	}
+
+	if (!initializeScene())
 	{
 		return false;
 	}
@@ -156,5 +195,18 @@ void CGraphics::Render(float fDeltaTime)
 {
 	float bgColor[] = { 0.0f, 0.0f, 1.0f ,1.0f};
 	this->m_pDeviceContext->ClearRenderTargetView(this->m_pRenderingTargetView.Get(), bgColor);
+
+	this->m_pDeviceContext->IASetInputLayout(this->m_pVertexShader.GetInputLayout());
+	this->m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINELIST);
+
+	this->m_pDeviceContext->VSSetShader(m_pVertexShader.GetShader(), NULL, 0);
+	this->m_pDeviceContext->PSSetShader(m_pPixelShader.GetShader(), NULL, 0);
+
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+	this->m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
+
+	this->m_pDeviceContext->Draw(4, 0);
+
 	this->m_pSwapChain->Present(1, NULL);
 }
