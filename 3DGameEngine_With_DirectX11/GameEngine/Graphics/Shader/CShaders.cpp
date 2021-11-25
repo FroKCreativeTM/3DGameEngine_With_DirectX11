@@ -1,6 +1,7 @@
 #include "CShaders.h"
 
-bool CVertexShader::Initialize(Microsoft::WRL::ComPtr<ID3D11Device>& device, wstring shaderPath)
+bool CVertexShader::Initialize(Microsoft::WRL::ComPtr<ID3D11Device>& device, wstring shaderPath,
+    D3D11_INPUT_ELEMENT_DESC* pLayoutDesc, UINT numElements)
 {
     HRESULT hr = D3DReadFileToBlob(shaderPath.c_str(), m_pShaderBuffer.GetAddressOf());
 
@@ -25,6 +26,19 @@ bool CVertexShader::Initialize(Microsoft::WRL::ComPtr<ID3D11Device>& device, wst
         return false;
     }
 
+    hr = device->CreateInputLayout(pLayoutDesc,
+        numElements,
+        this->m_pShaderBuffer->GetBufferPointer(),
+        this->m_pShaderBuffer->GetBufferSize(),
+        this->m_pInputLayout.GetAddressOf());
+
+    if (FAILED(hr))
+    {
+        throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeShader() \
+				m_pDevice->CreateInputLayout()"));
+        return false;
+    }
+
     return true;
 }
 
@@ -36,4 +50,9 @@ ID3D11VertexShader* CVertexShader::GetShader()
 ID3D10Blob* CVertexShader::GetBuffer()
 {
     return this->m_pShaderBuffer.Get();
+}
+
+ID3D11InputLayout* CVertexShader::GetInputLayout()
+{
+    return this->m_pInputLayout.Get();
 }

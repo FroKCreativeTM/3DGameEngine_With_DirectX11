@@ -83,11 +83,6 @@ bool CGraphics::initD3DApp(HWND hwnd, int width, int height)
 
 bool CGraphics::initializeShader()
 {
-	if (!m_pVertexShader.Initialize(m_pDevice, L"..\\Bin\\VertexShader.cso"))
-	{
-		return false;
-	}
-
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		// 1. sementic 이름 : 셰이더의 입력 시그네처 속의 이 요소와 관련된 HLSL의 이름
@@ -105,16 +100,9 @@ bool CGraphics::initializeShader()
 
 	UINT numElements = ARRAYSIZE(layout);
 
-	HRESULT hr = this->m_pDevice->CreateInputLayout(layout,
-													numElements,
-													this->m_pVertexShader.GetBuffer()->GetBufferPointer(),
-													this->m_pVertexShader.GetBuffer()->GetBufferSize(),
-													this->m_pInputLayout.GetAddressOf());
-
-	if (FAILED(hr)) 
+	if (!m_pVertexShader.Initialize(m_pDevice, L"..\\Bin\\VertexShader.cso",
+		layout, numElements))
 	{
-		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeShader() \
-				m_pDevice->CreateInputLayout()"));
 		return false;
 	}
 

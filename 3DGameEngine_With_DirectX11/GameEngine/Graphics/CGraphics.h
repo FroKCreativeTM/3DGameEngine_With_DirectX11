@@ -33,11 +33,7 @@ private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>						m_pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>				m_pRenderingTargetView;
 
-	// 그래픽 렌더링에 필요한 것
-	// Input 어셈블러 : 첫 번째 목적은 응용 프로그램에서 제공한 정점 버퍼로부터 
-	// 정점 데이터를 다른 파이프라인 단계에서 사용할 프리미티브로 조립하는 것
-	// 두 번째 목적은 시스템 생성 값(System-generated-Value)을 추가하는 것
-	Microsoft::WRL::ComPtr<ID3D11InputLayout>					m_pInputLayout;
+	// Input Assembler(이건 Shader.h에 있는 layout이 할꺼임)
 	// VERTEX SHADER
 	CVertexShader												m_pVertexShader;
 	// RESTERIZER
