@@ -109,5 +109,8 @@
     <FxCompile Include="GameEngine\Graphics\Shader\VertexShader.hlsl">
       <Filter>리소스 파일</Filter>
     </FxCompile>
+    <FxCompile Include="GameEngine\Graphics\Shader\PixelShader.hlsl">
+      <Filter>리소스 파일</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

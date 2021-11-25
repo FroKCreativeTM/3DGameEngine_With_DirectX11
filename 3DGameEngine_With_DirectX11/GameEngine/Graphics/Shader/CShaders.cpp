@@ -56,3 +56,18 @@ ID3D11InputLayout* CVertexShader::GetInputLayout()
 {
     return this->m_pInputLayout.Get();
 }
+
+bool CPixelShader::Initialize(Microsoft::WRL::ComPtr<ID3D11Device>& device, wstring shaderPath)
+{
+    return true;
+}
+
+ID3D11PixelShader* CPixelShader::GetShader() 
+{
+    return this->m_pShader.Get();
+}
+
+ID3D10Blob* CPixelShader::GetBuffer()
+{
+    return this->m_pShaderBuffer.Get();
+}

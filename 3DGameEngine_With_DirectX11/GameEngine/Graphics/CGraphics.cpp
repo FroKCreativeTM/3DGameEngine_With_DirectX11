@@ -73,11 +73,24 @@ bool CGraphics::initD3DApp(HWND hwnd, int width, int height)
 		return false;
 	}
 
+	// Output Merger를 담당
 	this->m_pDeviceContext->OMSetRenderTargets(
 		1,
 		this->m_pRenderingTargetView.GetAddressOf(),
 		NULL);
 
+	// 이제 뷰포트에 대한 설정을 한다.
+	D3D11_VIEWPORT viewport;
+	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.Width = width;
+	viewport.Height = height;
+
+	// 뷰포트를 적용한다.
+	this->m_pDeviceContext->RSSetViewports(1, &viewport);
+	 
 	return true;
 }
 
@@ -100,8 +113,15 @@ bool CGraphics::initializeShader()
 
 	UINT numElements = ARRAYSIZE(layout);
 
+	// 정점 셰이더 실패시 false, 아니면 true
 	if (!m_pVertexShader.Initialize(m_pDevice, L"..\\Bin\\VertexShader.cso",
 		layout, numElements))
+	{
+		return false;
+	}
+
+	// 픽셀 셰이더 실패시 false, 아니면 true
+	if (!m_pPixelShader.Initialize(m_pDevice, L"..\\Bin\\PixelShader.cso"))
 	{
 		return false;
 	}

@@ -33,11 +33,12 @@ private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>						m_pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>				m_pRenderingTargetView;
 
-	// Input Assembler(이건 Shader.h에 있는 layout이 할꺼임)
-	// VERTEX SHADER
+	// Input Assembler(이건 Shader.h에 있는 layout이 할꺼임) (Complete)
+	// VERTEX SHADER (Complete)
 	CVertexShader												m_pVertexShader;
-	// RESTERIZER
-	// PIXEL SHADER
-	// OUTPUT MERGER
+	// RESTERIZER(Complete)
+	// PIXEL SHADER(Complete)
+	CPixelShader												m_pPixelShader;
+	// OUTPUT MERGER - OMSetRenderTargers(Complete)
 };
 

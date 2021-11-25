@@ -22,9 +22,8 @@ WinApiGameEngine 프로젝트 (url : https://github.com/FroKCreativeTM/WinApiGameEng
 - 그래픽 렌더링에 필요한 것
 1. Input 어셈블러(IA) : 첫 번째 목적은 응용 프로그램에서 제공한 정점 버퍼로부터 
 정점 데이터를 다른 파이프라인 단계에서 사용할 프리미티브로 조립하는 것</br>
-두 번째 목적은 시스템 생성 값(System-generated-Value)을 추가하는 것
-
-2. VERTEX SHADER
-3. RESTERIZER
-4. PIXEL SHADER
-5. OUTPUT MERGER
+두 번째 목적은 시스템 생성 값(System-generated-Value)을 추가하는 것 (Complete)</br>
+2. VERTEX SHADER - 정점들을 관리하기 위해서 존재하는 셰이더(Complete)</br>
+3. RESTERIZER(Complete)</br>
+4. PIXEL SHADER(Complete)</br>
+5. OUTPUT MERGER - OMSetRenderTargers(Complete)</br>
