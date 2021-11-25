@@ -6,3 +6,13 @@ WinApiGameEngine 프로젝트 (url : https://github.com/FroKCreativeTM/WinApiGameEng
 </br> 그리고 이를 이용해서 게임 엔진을 제작합니다.
 
 - 윈도우 창 구현
+
+# 2021-11-25
+DirectX 11 렌더링 잡기 완료</br>
+- 알아야 할 키워드 
+</br></br>
+1. DXGI_SWAP_CHAIN_DESC - 스왑 체인(렌더링 버퍼를 관리)하기 위한 구조체 타입</br>
+2. 어뎁터가 무엇인가? - 내 그래픽 카드에 대한 정보를 가져오기 위한 데이터 타입</br>
+3. Microsoft::WRL::ComPtr - 마이크로소프트의 ABI, 프로세스 간의 통신과 동적 오브젝트 생성이 가능해진다.</br>
+4. ID3D11Device - DirectX 디바이스 그 자체, 렌더링할 때 옵션 전반을 관리하는 느낌으로 보면 될 듯</br>
+5. ID3D11DeviceContext - 현재 디바이스 내 상황을 관리하기 위한 자료형 </br>
