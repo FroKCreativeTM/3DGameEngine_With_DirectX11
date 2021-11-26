@@ -27,3 +27,6 @@ WinApiGameEngine 프로젝트 (url : https://github.com/FroKCreativeTM/WinApiGameEng
 3. RESTERIZER(Complete)</br>
 4. PIXEL SHADER(Complete)</br>
 5. OUTPUT MERGER - OMSetRenderTargers(Complete)</br>
+
+#2021-11-26
+- 정점 쉐이더 및 픽셀 쉐이더의 구조체화 및 그래픽스 클래스 수정
