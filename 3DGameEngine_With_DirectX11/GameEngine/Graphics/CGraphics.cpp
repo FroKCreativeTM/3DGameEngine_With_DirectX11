@@ -106,7 +106,10 @@ bool CGraphics::initializeShader()
 		// 6. InputSlotClass : 
 		// 7. InstanceDataStepRate
 
-		{"POSITION", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA, 0  },
+		{"POSITION", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT, 0, 0, 
+		D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA, 0  },
+		{"COLOR", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32B32_FLOAT, 0, 
+		D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA, 0  },
 	};
 
 	UINT numElements = ARRAYSIZE(layout);
@@ -131,10 +134,9 @@ bool CGraphics::initializeScene()
 {
 	Vertex vertices[] =
 	{
-		Vertex(0.0f, 0.0f),		// center
-		Vertex(-0.1f, 0.0f),	// left
-		Vertex(0.1f, 0.0f),		// right
-		Vertex(0.0f, 0.1f),		// top
+		Vertex(-0.5f, -0.5f, 1.0f, 0.0f, 0.0f),		// left red
+		Vertex(0.0f, 0.5f, 0.0f, 1.0f, 0.0f),		// top  green
+		Vertex(0.5f, -0.5f, 0.0f, 0.0f, 1.0f),		// right blue
 	};
 
 	D3D11_BUFFER_DESC vertexBufferDesc;
@@ -193,11 +195,11 @@ bool CGraphics::Initialize(HWND hwnd, int width, int height)
 
 void CGraphics::Render(float fDeltaTime)
 {
-	float bgColor[] = { 0.0f, 0.0f, 1.0f ,1.0f};
+	float bgColor[] = { 0.0f, 0.0f, 0.0f ,1.0f};
 	this->m_pDeviceContext->ClearRenderTargetView(this->m_pRenderingTargetView.Get(), bgColor);
 
 	this->m_pDeviceContext->IASetInputLayout(this->m_pVertexShader.GetInputLayout());
-	this->m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINELIST);
+	this->m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	this->m_pDeviceContext->VSSetShader(m_pVertexShader.GetShader(), NULL, 0);
 	this->m_pDeviceContext->PSSetShader(m_pPixelShader.GetShader(), NULL, 0);
@@ -206,7 +208,7 @@ void CGraphics::Render(float fDeltaTime)
 	UINT offset = 0;
 	this->m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
 
-	this->m_pDeviceContext->Draw(4, 0);
+	this->m_pDeviceContext->Draw(3, 0);
 
 	this->m_pSwapChain->Present(1, NULL);
 }
