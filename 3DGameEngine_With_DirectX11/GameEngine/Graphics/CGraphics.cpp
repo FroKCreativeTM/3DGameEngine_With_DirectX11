@@ -155,6 +155,10 @@ bool CGraphics::initD3DApp(HWND hwnd, int width, int height)
 		return false;
 	}
 
+	// 폰트에 대한 생성
+	m_pSpriteBatch = std::make_unique<DirectX::SpriteBatch>(this->m_pDeviceContext.Get());
+	m_pSpriteFont = std::make_unique<DirectX::SpriteFont>(this->m_pDevice.Get(), L"GameData\\Fonts\\comic_sans_ms_16.spritefont");
+
 	return true;
 }
 
@@ -324,6 +328,12 @@ void CGraphics::Render(float fDeltaTime)
 	// 초록색 삼각형
 	this->m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer2.GetAddressOf(), &stride, &offset);
 	this->m_pDeviceContext->Draw(3, 0);
+
+	// 폰트를 그린다.
+	m_pSpriteBatch->Begin();
+	m_pSpriteFont->DrawString(m_pSpriteBatch.get(), L"Hello World", DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::Colors::White, 
+		0.0f, DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f));
+	m_pSpriteBatch->End();
 
 	// 그리고 이를 스왑 체인에 적용한다.
 	this->m_pSwapChain->Present(1, NULL);

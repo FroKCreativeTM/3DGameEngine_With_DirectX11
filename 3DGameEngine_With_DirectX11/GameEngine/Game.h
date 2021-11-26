@@ -27,6 +27,10 @@
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
 
+// 폰트 관련 헤더
+#include <SpriteBatch.h>
+#include <SpriteFont.h>
+
 using namespace std;
 
 // custom header

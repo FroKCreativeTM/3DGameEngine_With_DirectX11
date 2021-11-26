@@ -5,6 +5,7 @@
 #include "CAdapterReader.h"
 #include "Shader/CShaders.h"
 
+
 class CGraphics
 {
 private : 
@@ -54,5 +55,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>						m_pDepthStencilBuffer;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState>				m_pDepthStencilState;
 
+	std::unique_ptr<DirectX::SpriteBatch>						m_pSpriteBatch;
+	std::unique_ptr<DirectX::SpriteFont>						m_pSpriteFont;
 };
 
