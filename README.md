@@ -9,6 +9,10 @@ WinApiGameEngine 프로젝트 (url : https://github.com/FroKCreativeTM/WinApiGameEng
 
 # 2021-11-25
 - DirectX 11 렌더링 잡기 완료</br>
+
+- Device :  물리적인 그래픽스 장치에 대한 소프트웨어 컨트롤러 인터페이스, 자원을 할당하거나, 특징들이 지원되는지 체크한다.
+- DeviceContext : 렌더링 상태를 세팅하고, 그래픽스 파이프라인에 자원을 바인딩하며, 렌더링 커맨드에 대해 처리한다.
+
 - 셰이더 설정 및 PATH매니저, 그리고 Input 클래스의 싱글톤화
 
 - 알아야 할 키워드 
@@ -30,3 +34,8 @@ WinApiGameEngine 프로젝트 (url : https://github.com/FroKCreativeTM/WinApiGameEng
 
 #2021-11-26
 - 정점 쉐이더 및 픽셀 쉐이더의 구조체화 및 그래픽스 클래스 수정
+
+- Depth 버퍼와 Stencil 버퍼 설정
+스텐실 버퍼는 깊이 버퍼, 백 버퍼와 마찬가지로 같은 크기를 가지는 오프 스크린 버퍼이다.
+백버퍼의 일부 영역을 차단하여 그리지 않기 위해 사용되어지는 특수한 버퍼라고 생각하면 된다.
+보통 거울이나 평면 그림자에 사용되며, 이 거울에 비치지 않는 물체를 차단하기 위해 있는 것이 바로 이 스텐실 버퍼!

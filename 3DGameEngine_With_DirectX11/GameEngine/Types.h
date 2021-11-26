@@ -202,14 +202,15 @@ typedef struct _tagRectangle
 
 struct Vertex
 {
-	Vertex() : 
-		pos(0.0f, 0.0f)
+	Vertex() :
+		pos(0.0f, 0.0f, 0.0f),
+		color(0.0f, 0.0f, 0.0f)
 	{}
-	Vertex(float x, float y, float r, float g, float b) :
-		pos(x, y),
+	Vertex(float x, float y, float z, float r, float g, float b) :
+		pos(x, y, z),
 		color(r, g, b)
 	{}
 
-	DirectX::XMFLOAT2 pos; // for vertex
+	DirectX::XMFLOAT3 pos; // for vertex
 	DirectX::XMFLOAT3 color;	// for pixel
 };
