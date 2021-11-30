@@ -220,16 +220,24 @@ bool CGraphics::initializeShader()
 bool CGraphics::initializeScene()
 {
 	// Z 버퍼를 위한 버텍스 1
+	// 2   3
+	//
+	// 1   4
 	Vertex vertices[] =
 	{
 		Vertex(-0.5f, -0.5f, 1.0f, 0.0f, 1.0f),		// bottom left 
 		Vertex(-0.5f, 0.5f, 1.0f, 0.0f, 0.0f),		// top left 
 		Vertex(0.5f, 0.5f, 1.0f, 1.0f, 0.0f),		// top right 
-
-		Vertex(-0.5f, -0.5f, 1.0f, 0.0f, 1.0f),		// bottom left 
-		Vertex(0.5f, 0.5f, 1.0f, 1.0f, 0.0f),		// top right 
 		Vertex(0.5f, -0.5f, 1.0f, 1.0f, 1.0f),		// bottom right 
 	}; 
+
+	DWORD indices[] =
+	{
+		0, 1, 2,
+		0, 2, 3,
+	};
+
+	
 
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -250,7 +258,30 @@ bool CGraphics::initializeScene()
 
 	if (FAILED(hr))
 	{
-		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() m_pDevice->CreateBuffer()"));
+		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() m_pDevice->CreateBuffer() - Vertex"));
+		return false;
+	}
+
+	// 인덱스 버퍼를 생성한다.
+	D3D11_BUFFER_DESC indexBufferDesc;
+	ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth = sizeof(DWORD) * ARRAYSIZE(indices);
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA indexBufferData;
+	indexBufferData.pSysMem = indices;
+
+	hr = this->m_pDevice->CreateBuffer(&indexBufferDesc,
+		&indexBufferData,
+		this->m_pIndexBuffer.GetAddressOf());
+
+	if (FAILED(hr))
+	{
+		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() m_pDevice->CreateBuffer() - Index"));
 		return false;
 	}
 
@@ -330,8 +361,11 @@ void CGraphics::Render(float fDeltaTime)
 	// 사각형
 	this->m_pDeviceContext->PSSetShaderResources(0, 1, m_pTexture.GetAddressOf());
 	this->m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
+	// (인덱스 버퍼 이용)
+	this->m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 	// 다음 적용된 설정에 따라서 데이터를 그린다.
-	this->m_pDeviceContext->Draw(6, 0);
+	// 인덱스 버퍼에 있는 데이터에 맞춰 그린다.
+	this->m_pDeviceContext->DrawIndexed(6, 0, 0);
 
 	// 폰트를 그린다.
 	m_pSpriteBatch->Begin();

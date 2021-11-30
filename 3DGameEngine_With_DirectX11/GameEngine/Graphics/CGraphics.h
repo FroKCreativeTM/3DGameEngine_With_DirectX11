@@ -41,6 +41,8 @@ private:
 	// VERTEX SHADER (Complete)
 	CVertexShader												m_pVertexShader;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>						m_pVertexBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer>						m_pIndexBuffer;
+
 	// RESTERIZER(Complete)
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState>				m_pRasterizerState;
 	// PIXEL SHADER(Complete)
