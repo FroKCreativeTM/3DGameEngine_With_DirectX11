@@ -164,6 +164,8 @@
     <ClInclude Include="GameEngine\Error\CGameError.h" />
     <ClInclude Include="GameEngine\Flag.h" />
     <ClInclude Include="GameEngine\Game.h" />
+    <ClInclude Include="GameEngine\Graphics\Buffer\CIndexBuffer.h" />
+    <ClInclude Include="GameEngine\Graphics\Buffer\CVertexBuffer.h" />
     <ClInclude Include="GameEngine\Graphics\CAdapterReader.h" />
     <ClInclude Include="GameEngine\Graphics\CGraphics.h" />
     <ClInclude Include="GameEngine\Graphics\Shader\CShaders.h" />

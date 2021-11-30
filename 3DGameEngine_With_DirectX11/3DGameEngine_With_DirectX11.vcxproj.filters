@@ -37,6 +37,9 @@
     <Filter Include="01. GameEngine\05. PathManager">
       <UniqueIdentifier>{cdb028aa-dd8f-4bb4-970a-aecb3de22ae5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. GameEngine\02. Graphics\02. Buffer">
+      <UniqueIdentifier>{e9fa66a8-9781-4b60-a16a-c3e5ffdca687}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -103,6 +106,12 @@
     </ClInclude>
     <ClInclude Include="GameEngine\Graphics\Shader\CShaders.h">
       <Filter>01. GameEngine\02. Graphics\01. Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\Buffer\CVertexBuffer.h">
+      <Filter>01. GameEngine\02. Graphics\02. Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\Buffer\CIndexBuffer.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

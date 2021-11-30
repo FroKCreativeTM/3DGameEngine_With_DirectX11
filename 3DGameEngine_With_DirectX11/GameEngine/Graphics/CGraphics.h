@@ -4,7 +4,8 @@
 #include "../Error/CGameError.h"
 #include "CAdapterReader.h"
 #include "Shader/CShaders.h"
-
+#include "Buffer/CVertexBuffer.h"
+#include "Buffer/CIndexBuffer.h"
 
 class CGraphics
 {
@@ -40,8 +41,8 @@ private:
 	// Input Assembler(이건 Shader.h에 있는 layout이 할꺼임) (Complete)
 	// VERTEX SHADER (Complete)
 	CVertexShader												m_pVertexShader;
-	Microsoft::WRL::ComPtr<ID3D11Buffer>						m_pVertexBuffer;
-	Microsoft::WRL::ComPtr<ID3D11Buffer>						m_pIndexBuffer;
+	CVertexBuffer<Vertex>										m_pVertexBuffer;
+	CIndexBuffer												m_pIndexBuffer;
 
 	// RESTERIZER(Complete)
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState>				m_pRasterizerState;

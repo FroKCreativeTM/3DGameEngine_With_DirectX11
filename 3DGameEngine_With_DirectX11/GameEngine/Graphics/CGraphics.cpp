@@ -237,25 +237,8 @@ bool CGraphics::initializeScene()
 		0, 2, 3,
 	};
 
-	
-
-	D3D11_BUFFER_DESC vertexBufferDesc;
-	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
-
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(Vertex) * ARRAYSIZE(vertices);
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA vertexBufferData;
-	ZeroMemory(&vertexBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
-	vertexBufferData.pSysMem = vertices;
-
-	HRESULT hr = this->m_pDevice->CreateBuffer(&vertexBufferDesc, 
-		&vertexBufferData, 
-		this->m_pVertexBuffer.GetAddressOf());
-
+	// 버텍스 버퍼를 생성한다.
+	HRESULT hr = this->m_pVertexBuffer.Initialize(this->m_pDevice.Get(), vertices, ARRAYSIZE(vertices));
 	if (FAILED(hr))
 	{
 		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() m_pDevice->CreateBuffer() - Vertex"));
@@ -263,22 +246,7 @@ bool CGraphics::initializeScene()
 	}
 
 	// 인덱스 버퍼를 생성한다.
-	D3D11_BUFFER_DESC indexBufferDesc;
-	ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
-
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(DWORD) * ARRAYSIZE(indices);
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.CPUAccessFlags = 0;
-	indexBufferDesc.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA indexBufferData;
-	indexBufferData.pSysMem = indices;
-
-	hr = this->m_pDevice->CreateBuffer(&indexBufferDesc,
-		&indexBufferData,
-		this->m_pIndexBuffer.GetAddressOf());
-
+	hr = this->m_pIndexBuffer.Initialize(this->m_pDevice.Get(), indices, ARRAYSIZE(indices));
 	if (FAILED(hr))
 	{
 		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() m_pDevice->CreateBuffer() - Index"));
@@ -355,12 +323,11 @@ void CGraphics::Render(float fDeltaTime)
 	this->m_pDeviceContext->PSSetShader(m_pPixelShader.GetShader(), NULL, 0);
 
 	// 쉐이더 버퍼를 IA에 적용해준다.
-	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 
 	// 사각형
 	this->m_pDeviceContext->PSSetShaderResources(0, 1, m_pTexture.GetAddressOf());
-	this->m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
+	this->m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), m_pVertexBuffer.GetStridePtr(), &offset);
 	// (인덱스 버퍼 이용)
 	this->m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 	// 다음 적용된 설정에 따라서 데이터를 그린다.
