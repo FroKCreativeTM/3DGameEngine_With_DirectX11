@@ -5,6 +5,13 @@ INT APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR lpCmdLine,
 	_In_ int nCmdShow)
 {
+	HRESULT hr = CoInitialize(nullptr);
+	if (FAILED(hr))
+	{
+		throw(CGameError(NSGameError::FATAL_ERROR, "Error CoInitialize()"));
+		return -1;
+	}
+
 	if (!CCore::GetInst()->Init(hInstance))
 	{
 		CCore::DestroyInst();

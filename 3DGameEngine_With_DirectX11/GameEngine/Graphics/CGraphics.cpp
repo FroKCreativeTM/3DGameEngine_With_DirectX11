@@ -159,6 +159,25 @@ bool CGraphics::initD3DApp(HWND hwnd, int width, int height)
 	m_pSpriteBatch = std::make_unique<DirectX::SpriteBatch>(this->m_pDeviceContext.Get());
 	m_pSpriteFont = std::make_unique<DirectX::SpriteFont>(this->m_pDevice.Get(), L"GameData\\Fonts\\comic_sans_ms_16.spritefont");
 
+	D3D11_SAMPLER_DESC sampDesc;
+	ZeroMemory(&sampDesc, sizeof(D3D11_SAMPLER_DESC));
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sampDesc.MinLOD = 0;
+	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	hr = this->m_pDevice->CreateSamplerState(
+		&sampDesc,
+		this->m_pSamplerState.GetAddressOf());
+	if (FAILED(hr))
+	{
+		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initD3DApp() m_pDevice->CreateSamplerState()"));
+		return false;
+	}
+
 	return true;
 }
 
@@ -176,7 +195,7 @@ bool CGraphics::initializeShader()
 
 		{"POSITION", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, 
 		D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA, 0  },
-		{"COLOR", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32B32_FLOAT, 0, 
+		{"TEXCOORD", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT, 0, 
 		D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA, 0  },
 	};
 
@@ -203,10 +222,14 @@ bool CGraphics::initializeScene()
 	// Z 버퍼를 위한 버텍스 1
 	Vertex vertices[] =
 	{
-		Vertex(-0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f),		// left red
-		Vertex(0.0f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f),		// top  green
-		Vertex(0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f),		// right blue
-	};
+		Vertex(-0.5f, -0.5f, 1.0f, 0.0f, 1.0f),		// bottom left 
+		Vertex(-0.5f, 0.5f, 1.0f, 0.0f, 0.0f),		// top left 
+		Vertex(0.5f, 0.5f, 1.0f, 1.0f, 0.0f),		// top right 
+
+		Vertex(-0.5f, -0.5f, 1.0f, 0.0f, 1.0f),		// bottom left 
+		Vertex(0.5f, 0.5f, 1.0f, 1.0f, 0.0f),		// top right 
+		Vertex(0.5f, -0.5f, 1.0f, 1.0f, 1.0f),		// bottom right 
+	}; 
 
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -231,32 +254,14 @@ bool CGraphics::initializeScene()
 		return false;
 	}
 
-	// Z 버퍼를 위한 버텍스 2
-	Vertex vertices2[] =
-	{
-		Vertex(-0.25f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f),		// left red
-		Vertex(0.0f, 0.25f, 0.0f, 0.0f, 1.0f, 0.0f),		// top  green
-		Vertex(0.25f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f),		// right blue
-	};
-
-	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
-
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(Vertex) * ARRAYSIZE(vertices2);
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
-
-	ZeroMemory(&vertexBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
-	vertexBufferData.pSysMem = vertices2;
-
-	hr = this->m_pDevice->CreateBuffer(&vertexBufferDesc,
-		&vertexBufferData,
-		this->m_pVertexBuffer2.GetAddressOf());
+	hr = DirectX::CreateWICTextureFromFile(this->m_pDevice.Get(), 
+		L"GameData\\Textures\\todd_texture.jpg",
+		nullptr,
+		m_pTexture.GetAddressOf());
 
 	if (FAILED(hr))
 	{
-		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() m_pDevice->CreateBuffer()"));
+		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() DirectX::CreateWICTextureFromFile()"));
 		return false;
 	}
 
@@ -311,6 +316,9 @@ void CGraphics::Render(float fDeltaTime)
 	// OM에 Depth/Stencil State를 적용한다.
 	this->m_pDeviceContext->OMSetDepthStencilState(this->m_pDepthStencilState.Get(), 0);
 
+	// 픽셀 쉐이더에 텍스처를 위한 샘플러 상태에 대해 넣는다. (이렇게 하면 쉐이더에 레지스터에 넣는다.)
+	this->m_pDeviceContext->PSSetSamplers(0, 1, this->m_pSamplerState.GetAddressOf());
+
 	// 쉐이더에 대한 설정을 한다.
 	this->m_pDeviceContext->VSSetShader(m_pVertexShader.GetShader(), NULL, 0);
 	this->m_pDeviceContext->PSSetShader(m_pPixelShader.GetShader(), NULL, 0);
@@ -319,15 +327,11 @@ void CGraphics::Render(float fDeltaTime)
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 
-	// 빨간색 삼각형
+	// 사각형
+	this->m_pDeviceContext->PSSetShaderResources(0, 1, m_pTexture.GetAddressOf());
 	this->m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
 	// 다음 적용된 설정에 따라서 데이터를 그린다.
-	this->m_pDeviceContext->Draw(3, 0);
-
-
-	// 초록색 삼각형
-	this->m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer2.GetAddressOf(), &stride, &offset);
-	this->m_pDeviceContext->Draw(3, 0);
+	this->m_pDeviceContext->Draw(6, 0);
 
 	// 폰트를 그린다.
 	m_pSpriteBatch->Begin();

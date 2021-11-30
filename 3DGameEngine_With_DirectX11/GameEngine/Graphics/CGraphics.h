@@ -41,7 +41,6 @@ private:
 	// VERTEX SHADER (Complete)
 	CVertexShader												m_pVertexShader;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>						m_pVertexBuffer;
-	Microsoft::WRL::ComPtr<ID3D11Buffer>						m_pVertexBuffer2;
 	// RESTERIZER(Complete)
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState>				m_pRasterizerState;
 	// PIXEL SHADER(Complete)
@@ -57,5 +56,9 @@ private:
 
 	std::unique_ptr<DirectX::SpriteBatch>						m_pSpriteBatch;
 	std::unique_ptr<DirectX::SpriteFont>						m_pSpriteFont;
+
+	// 텍스처 관련 변수
+	Microsoft::WRL::ComPtr <ID3D11SamplerState>					m_pSamplerState;
+	Microsoft::WRL::ComPtr <ID3D11ShaderResourceView>			m_pTexture;
 };
 

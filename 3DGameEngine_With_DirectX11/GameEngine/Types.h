@@ -204,13 +204,13 @@ struct Vertex
 {
 	Vertex() :
 		pos(0.0f, 0.0f, 0.0f),
-		color(0.0f, 0.0f, 0.0f)
+		texCoord(0.0f, 0.0f)
 	{}
-	Vertex(float x, float y, float z, float r, float g, float b) :
+	Vertex(float x, float y, float z, float u, float v) :
 		pos(x, y, z),
-		color(r, g, b)
+		texCoord(u, v)
 	{}
 
 	DirectX::XMFLOAT3 pos; // for vertex
-	DirectX::XMFLOAT3 color;	// for pixel
+	DirectX::XMFLOAT2 texCoord;	// for pixel(texture)
 };
