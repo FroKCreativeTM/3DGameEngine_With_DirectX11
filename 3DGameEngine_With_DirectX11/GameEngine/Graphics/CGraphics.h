@@ -7,13 +7,14 @@
 #include "Buffer/CVertexBuffer.h"
 #include "Buffer/CIndexBuffer.h"
 #include "Buffer/CConstantBuffer.h"
+#include "../Camera/CCamera.h"
 
 class CGraphics
 {
 private : 
 	// 엔진 내부에서만 사용하는 D3D 프레젠테이션 
 	// 매개변수를 초기화한다.
-	bool initD3DApp(HWND hwnd, int width, int height);
+	bool initD3DApp(HWND hwnd);
 
 	// 셰이더를 초기화 하기 위한 함수이다.
 	bool initializeShader();
@@ -34,6 +35,9 @@ public:
 	void Render(float fDeltaTime);
 
 private:
+	int															m_nWindowWidth;
+	int															m_nWindowHeight;
+
 	Microsoft::WRL::ComPtr<ID3D11Device>						m_pDevice;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext>					m_pDeviceContext;
 	Microsoft::WRL::ComPtr<IDXGISwapChain>						m_pSwapChain;

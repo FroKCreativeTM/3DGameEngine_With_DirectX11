@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameEngine\Camera\CCamera.cpp" />
     <ClCompile Include="GameEngine\CCore.cpp" />
     <ClCompile Include="GameEngine\Graphics\CAdapterReader.cpp" />
     <ClCompile Include="GameEngine\Graphics\CGraphics.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameEngine\Camera\CCamera.h" />
     <ClInclude Include="GameEngine\CCore.h" />
     <ClInclude Include="GameEngine\Error\CGameError.h" />
     <ClInclude Include="GameEngine\Flag.h" />

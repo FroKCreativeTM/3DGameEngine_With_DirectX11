@@ -2,6 +2,7 @@
 #include "Timer/CTimer.h"
 #include "Input/CInput.h"
 #include "Path/CPathManager.h"
+#include "Camera/CCamera.h"
 
 // nullptr 선언은 여기서 가능하다.
 // 왜냐면 얘는 프로그램 시작과 생기는 인스턴스고
@@ -37,6 +38,12 @@ bool CCore::Init(HINSTANCE hInstance,
 
     // 윈도우창 생성
     Create();
+
+    // 카메라 매니저 초기화(얘가 먼저 초기화가 안 되면, 그래픽에서 오류 발생)
+    if (!GET_SINGLE(CCamera)->Init())
+    {
+        return false;
+    }
 
     // 그래픽 객체 생성
     if (!m_graphics.Initialize(m_hWnd, m_tRS.nWidth, m_tRS.nHeight)) 
@@ -97,7 +104,54 @@ LRESULT CCore::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         m_bLoop = false;
         PostQuitMessage(0);
-        break;
+        return 0;
+    case WM_KEYDOWN: case WM_SYSKEYDOWN:
+        GET_SINGLE(CInput)->KeyDown(wParam);
+        return 0;
+    case WM_KEYUP: case WM_SYSKEYUP:
+        GET_SINGLE(CInput)->KeyUp(wParam);
+        return 0;
+    case WM_CHAR:
+        GET_SINGLE(CInput)->KeyIn(wParam);
+        return 0;
+    case WM_MOUSEMOVE:
+        GET_SINGLE(CInput)->MouseIn(lParam);
+        return 0;
+    case WM_INPUT:
+        GET_SINGLE(CInput)->MouseRawIn(lParam);
+        return 0;
+    case WM_LBUTTONDOWN:
+        GET_SINGLE(CInput)->SetMouseLButton(true);
+        GET_SINGLE(CInput)->MouseIn(lParam);
+        return 0;
+    case WM_LBUTTONUP:
+        GET_SINGLE(CInput)->SetMouseLButton(false);
+        GET_SINGLE(CInput)->MouseIn(lParam);
+        return 0;
+    case WM_MBUTTONDOWN:
+        GET_SINGLE(CInput)->SetMouseMButton(true);
+        GET_SINGLE(CInput)->MouseIn(lParam);
+        return 0;
+    case WM_MBUTTONUP:
+        GET_SINGLE(CInput)->SetMouseMButton(false);
+        GET_SINGLE(CInput)->MouseIn(lParam);
+        return 0;
+    case WM_RBUTTONDOWN:
+        GET_SINGLE(CInput)->SetMouseRButton(true);
+        GET_SINGLE(CInput)->MouseIn(lParam);
+        return 0;
+    case WM_RBUTTONUP:
+        GET_SINGLE(CInput)->SetMouseRButton(false);
+        GET_SINGLE(CInput)->MouseIn(lParam);
+        return 0;
+    case WM_XBUTTONDOWN: case WM_XBUTTONUP:
+        GET_SINGLE(CInput)->SetMouseXButton(wParam);
+        GET_SINGLE(CInput)->MouseIn(lParam);
+        return 0;
+    case WM_DEVICECHANGE:
+        // 컨트롤러
+        GET_SINGLE(CInput)->CheckControllers();
+        return 0;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -180,7 +234,33 @@ void CCore::Logic()
 
 void CCore::Input(float fDeltaTime)
 {
-    
+
+    const float CAMERA_SPEED = 0.02f;
+
+    if (GET_SINGLE(CInput)->IsKeyDown('W'))
+    {
+        GET_SINGLE(CCamera)->AdjustPosition(GET_SINGLE(CCamera)->GetForwardVector() * CAMERA_SPEED);
+    }
+    if (GET_SINGLE(CInput)->IsKeyDown('S'))
+    {
+        GET_SINGLE(CCamera)->AdjustPosition(GET_SINGLE(CCamera)->GetBackwardVector() * CAMERA_SPEED);
+    }
+    if (GET_SINGLE(CInput)->IsKeyDown('A'))
+    {
+        GET_SINGLE(CCamera)->AdjustPosition(GET_SINGLE(CCamera)->GetLeftVector() * CAMERA_SPEED);
+    }
+    if (GET_SINGLE(CInput)->IsKeyDown('D'))
+    {
+        GET_SINGLE(CCamera)->AdjustPosition(GET_SINGLE(CCamera)->GetRightVector() * CAMERA_SPEED);
+    }
+    if (GET_SINGLE(CInput)->IsKeyDown(VK_SPACE))
+    {
+        GET_SINGLE(CCamera)->AdjustPosition(0.0f, CAMERA_SPEED, 0.0f);
+    }
+    if (GET_SINGLE(CInput)->IsKeyDown('Z'))
+    {
+        GET_SINGLE(CCamera)->AdjustPosition(0.0f, CAMERA_SPEED, 0.0f);
+    }
 }
 
 int CCore::Update(float fDeltaTime)
@@ -223,6 +303,7 @@ CCore::~CCore()
     DESTROY_SINGLE(CInput);
     DESTROY_SINGLE(CTimer);
     DESTROY_SINGLE(CPathManager);
+    DESTROY_SINGLE(CCamera);
 
     // 콘솔창 해제
 #ifdef _DEBUG

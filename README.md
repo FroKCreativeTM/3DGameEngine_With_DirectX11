@@ -41,3 +41,7 @@ WinApiGameEngine 프로젝트 (url : https://github.com/FroKCreativeTM/WinApiGameEng
 보통 거울이나 평면 그림자에 사용되며, 이 거울에 비치지 않는 물체를 차단하기 위해 있는 것이 바로 이 스텐실 버퍼!
 
 - 텍스트 띄우기 완료(폰트 매니저 클래스 만들 예정)
+
+# 2021-12-02
+View는 Eye의 position 그리고 Lookat pos 그리고 Up Vector 이 3개의 vector의 x/y/z를 담당한다.
+그리고 Projection은 FOV, Near/Far Z를 담당한다.

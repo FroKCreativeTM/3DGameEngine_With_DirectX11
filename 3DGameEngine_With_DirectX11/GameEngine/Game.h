@@ -27,6 +27,7 @@
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
 #include <WICTextureLoader.h>		// for texture(DTK)
+using namespace DirectX;
 
 // 폰트 관련 헤더
 #include <SpriteBatch.h>

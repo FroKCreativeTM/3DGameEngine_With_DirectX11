@@ -40,6 +40,9 @@
     <Filter Include="01. GameEngine\02. Graphics\02. Buffer">
       <UniqueIdentifier>{e9fa66a8-9781-4b60-a16a-c3e5ffdca687}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. GameEngine\06. Camera">
+      <UniqueIdentifier>{64088aa3-f173-485a-8cd6-366e15200c54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -65,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="GameEngine\Graphics\Shader\CShaders.cpp">
       <Filter>01. GameEngine\02. Graphics\01. Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Camera\CCamera.cpp">
+      <Filter>01. GameEngine\06. Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="GameEngine\Graphics\Buffer\CConstantBuffer.h">
       <Filter>01. GameEngine\02. Graphics\02. Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Camera\CCamera.h">
+      <Filter>01. GameEngine\06. Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

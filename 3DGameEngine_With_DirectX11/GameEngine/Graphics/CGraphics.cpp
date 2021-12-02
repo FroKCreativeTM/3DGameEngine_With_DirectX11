@@ -2,7 +2,7 @@
 
 #include <ctime>
 
-bool CGraphics::initD3DApp(HWND hwnd, int width, int height)
+bool CGraphics::initD3DApp(HWND hwnd)
 {
 	vector<CAdapterData> adapters = CAdapterReader::GetAdapters();
 
@@ -16,8 +16,8 @@ bool CGraphics::initD3DApp(HWND hwnd, int width, int height)
 	DXGI_SWAP_CHAIN_DESC scd;
 	ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
 
-	scd.BufferDesc.Width = width;
-	scd.BufferDesc.Height = height;
+	scd.BufferDesc.Width = m_nWindowWidth;
+	scd.BufferDesc.Height = m_nWindowHeight;
 	scd.BufferDesc.RefreshRate.Numerator = 60;
 	scd.BufferDesc.RefreshRate.Denominator = 1;
 	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -75,8 +75,8 @@ bool CGraphics::initD3DApp(HWND hwnd, int width, int height)
 
 	// Depth/Stencil 버퍼에 대한 설정
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
-	depthStencilDesc.Width = width;
-	depthStencilDesc.Height = height;
+	depthStencilDesc.Width = m_nWindowWidth;
+	depthStencilDesc.Height = m_nWindowHeight;
 	depthStencilDesc.MipLevels = 1;
 	depthStencilDesc.ArraySize = 1;
 	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -131,8 +131,8 @@ bool CGraphics::initD3DApp(HWND hwnd, int width, int height)
 	// 뷰포트 크기 설정
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
-	viewport.Width = width;
-	viewport.Height = height;
+	viewport.Width = m_nWindowWidth;
+	viewport.Height = m_nWindowHeight;
 
 	// 뷰포트의 깊이 설정
 	viewport.MinDepth = 0.0f;
@@ -225,10 +225,10 @@ bool CGraphics::initializeScene()
 	// 1   4
 	Vertex vertices[] =
 	{
-		Vertex(-0.5f, -0.5f, 1.0f, 0.0f, 1.0f),		// bottom left 
-		Vertex(-0.5f, 0.5f, 1.0f, 0.0f, 0.0f),		// top left 
-		Vertex(0.5f, 0.5f, 1.0f, 1.0f, 0.0f),		// top right 
-		Vertex(0.5f, -0.5f, 1.0f, 1.0f, 1.0f),		// bottom right 
+		Vertex(-0.5f, -0.5f, 0.0f, 0.0f, 1.0f),		// bottom left 
+		Vertex(-0.5f, 0.5f, 0.0f, 0.0f, 0.0f),		// top left 
+		Vertex(0.5f, 0.5f, 0.0f, 1.0f, 0.0f),		// top right 
+		Vertex(0.5f, -0.5f, 0.0f, 1.0f, 1.0f),		// bottom right 
 	}; 
 
 	DWORD indices[] =
@@ -272,6 +272,10 @@ bool CGraphics::initializeScene()
 		return false;
 	}
 
+	GET_SINGLE(CCamera)->SetPosition(0.0f, 0.0f, -2.0f);
+	GET_SINGLE(CCamera)->SetProjectionValues(90.0f, static_cast<float>(m_nWindowWidth) / static_cast<float>(m_nWindowHeight),
+		0.1f, 1000.0f);
+
 	return true;
 }
 
@@ -285,7 +289,10 @@ CGraphics::~CGraphics()
 
 bool CGraphics::Initialize(HWND hwnd, int width, int height)
 {
-	if (!initD3DApp(hwnd, width, height)) 
+	m_nWindowWidth = width;
+	m_nWindowHeight = height;
+
+	if (!initD3DApp(hwnd)) 
 	{
 		return false;
 	}
@@ -334,12 +341,16 @@ void CGraphics::Render(float fDeltaTime)
 	UINT offset = 0;
 
 	// 상수 버퍼를 업데이트한다.
-	static float yOff = 0.5f;
-	// yOff -= 0.1f;
+	// m_pConstBuffer.GetData().mat = DirectX::XMMatrixTranslation(0.0f, -0.5f, 0.0f);				// 여기까지 하면 column_major
+	// m_pConstBuffer.GetData().mat = DirectX::XMMatrixScaling(0.5f, 0.5f, 0.5f);
+	// m_pConstBuffer.GetData().mat = DirectX::XMMatrixTranspose(m_pConstBuffer.GetData().mat);	// 여기까지 하면 row_major
 
-	m_pConstBuffer.GetData().xOffset = 0.0f;
-	m_pConstBuffer.GetData().yOffset = yOff;
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
 
+	// view와 projection은 카메라가 설정해준다.
+	m_pConstBuffer.GetData().mat = worldMatrix *
+		GET_SINGLE(CCamera)->GetViewMatrix() * GET_SINGLE(CCamera)->GetProjectionMatrix();
+	m_pConstBuffer.GetData().mat = DirectX::XMMatrixTranspose(m_pConstBuffer.GetData().mat);
 	if (!m_pConstBuffer.ApplyChanges())
 	{
 		return;

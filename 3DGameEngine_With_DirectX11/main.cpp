@@ -12,7 +12,7 @@ INT APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		return -1;
 	}
 
-	if (!CCore::GetInst()->Init(hInstance, 800, 600))
+	if (!CCore::GetInst()->Init(hInstance))
 	{
 		CCore::DestroyInst();
 		return 0;
