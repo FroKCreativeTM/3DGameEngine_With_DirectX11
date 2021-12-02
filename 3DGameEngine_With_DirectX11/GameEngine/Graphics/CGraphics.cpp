@@ -264,6 +264,14 @@ bool CGraphics::initializeScene()
 		return false;
 	}
 
+	// 상수 버퍼를 초기화한다
+	hr = m_pConstBuffer.Initialize(this->m_pDevice.Get(), this->m_pDeviceContext.Get());
+	if (FAILED(hr))
+	{
+		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() m_pConstBuffer.Initialize()"));
+		return false;
+	}
+
 	return true;
 }
 
@@ -325,6 +333,19 @@ void CGraphics::Render(float fDeltaTime)
 	// 쉐이더 버퍼를 IA에 적용해준다.
 	UINT offset = 0;
 
+	// 상수 버퍼를 업데이트한다.
+	static float yOff = 0.5f;
+	// yOff -= 0.1f;
+
+	m_pConstBuffer.GetData().xOffset = 0.0f;
+	m_pConstBuffer.GetData().yOffset = yOff;
+
+	if (!m_pConstBuffer.ApplyChanges())
+	{
+		return;
+	}
+	m_pDeviceContext->VSSetConstantBuffers(0, 1, m_pConstBuffer.GetAddressOf());
+
 	// 사각형
 	this->m_pDeviceContext->PSSetShaderResources(0, 1, m_pTexture.GetAddressOf());
 	this->m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), m_pVertexBuffer.GetStridePtr(), &offset);
@@ -332,7 +353,7 @@ void CGraphics::Render(float fDeltaTime)
 	this->m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 	// 다음 적용된 설정에 따라서 데이터를 그린다.
 	// 인덱스 버퍼에 있는 데이터에 맞춰 그린다.
-	this->m_pDeviceContext->DrawIndexed(6, 0, 0);
+	this->m_pDeviceContext->DrawIndexed(m_pIndexBuffer.GetBufferSize(), 0, 0);
 
 	// 폰트를 그린다.
 	m_pSpriteBatch->Begin();

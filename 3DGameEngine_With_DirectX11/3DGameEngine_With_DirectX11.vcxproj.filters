@@ -111,7 +111,13 @@
       <Filter>01. GameEngine\02. Graphics\02. Buffer</Filter>
     </ClInclude>
     <ClInclude Include="GameEngine\Graphics\Buffer\CIndexBuffer.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>01. GameEngine\02. Graphics\02. Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\Buffer\ConstBufferType.h">
+      <Filter>01. GameEngine\02. Graphics\02. Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\Buffer\CConstantBuffer.h">
+      <Filter>01. GameEngine\02. Graphics\02. Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
