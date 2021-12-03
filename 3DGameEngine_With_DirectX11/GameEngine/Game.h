@@ -16,6 +16,7 @@
 #include <string>
 #include <functional>
 #include <conio.h>
+#include <iostream>
 
 // DirectX 관련 라이브러리 및 헤더
 #pragma comment(lib, "d3d11.lib")

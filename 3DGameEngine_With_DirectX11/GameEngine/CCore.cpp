@@ -45,12 +45,6 @@ bool CCore::Init(HINSTANCE hInstance,
         return false;
     }
 
-    // 그래픽 객체 생성
-    if (!m_graphics.Initialize(m_hWnd, m_tRS.nWidth, m_tRS.nHeight)) 
-    {
-        return false;
-    }
-
     // 경로관리자 초기화
     if (!GET_SINGLE(CPathManager)->Init())
     {
@@ -65,6 +59,12 @@ bool CCore::Init(HINSTANCE hInstance,
 
     // 인풋 매니저 초기화
     if (!GET_SINGLE(CInput)->Init(m_hWnd, false))
+    {
+        return false;
+    }
+
+    // 그래픽 객체 생성
+    if (!m_graphics.Initialize(m_hWnd, m_tRS.nWidth, m_tRS.nHeight))
     {
         return false;
     }
@@ -152,10 +152,8 @@ LRESULT CCore::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // 컨트롤러
         GET_SINGLE(CInput)->CheckControllers();
         return 0;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
     }
-    return 0;
+    return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
 ATOM CCore::MyRegisterClass()
@@ -234,7 +232,11 @@ void CCore::Logic()
 
 void CCore::Input(float fDeltaTime)
 {
-
+    if (GET_SINGLE(CInput)->GetMouseRButton())
+    {
+        GET_SINGLE(CCamera)->AdjustRotation((float)GET_SINGLE(CInput)->GetMouseRawY() * 0.01f,
+            (float)GET_SINGLE(CInput)->GetMouseRawX() * 0.01f, 0);
+    }
     const float CAMERA_SPEED = 0.02f;
 
     if (GET_SINGLE(CInput)->IsKeyDown('W'))
@@ -260,6 +262,11 @@ void CCore::Input(float fDeltaTime)
     if (GET_SINGLE(CInput)->IsKeyDown('Z'))
     {
         GET_SINGLE(CCamera)->AdjustPosition(0.0f, CAMERA_SPEED, 0.0f);
+    }
+    if (GET_SINGLE(CInput)->IsKeyDown(VK_ESCAPE))
+    {
+        m_bLoop = false;
+        PostQuitMessage(0);
     }
 }
 
@@ -294,7 +301,14 @@ CCore::CCore()
     // 컴파일 시간에 체크해서 이걸 동작시킬지 말지 결정한다.
 #ifdef _DEBUG   
     // 콘솔창을 생성시켜주는 함수
-    AllocConsole();
+    if (AllocConsole())
+    {
+        FILE* nfp[3];
+        freopen_s(nfp + 0, "CONOUT$", "rb", stdin);
+        freopen_s(nfp + 1, "CONOUT$", "wb", stdout);
+        freopen_s(nfp + 2, "CONOUT$", "wb", stderr);
+        std::ios::sync_with_stdio();
+    }
 #endif
 }
 

@@ -102,18 +102,6 @@ public:
     int  GetMouseX() { return m_mouseX; }
     int  GetMouseY() { return m_mouseY; }
 
-    int  GetMouseXMove() {
-        int sub = m_mouseOldX - m_mouseX;
-        m_mouseOldX = m_mouseX;
-        return sub;
-    }
-
-    int  GetMouseYMove() {
-        int sub = m_mouseOldY - m_mouseY;
-        m_mouseOldY = m_mouseY;
-        return sub;
-    }
-
     int  GetMouseRawX() {
         int rawX = m_mouseRawX;
         m_mouseRawX = 0;
@@ -399,7 +387,6 @@ private :
     char m_charIn;					// 마지막으로 입력한 문자.
     bool m_newLine;					// 새로운 줄이 시작될 때 true가 된다.
     int m_mouseX, m_mouseY;			// 화면상 마우스 데이터
-    int m_mouseOldX, m_mouseOldY;			// 화면상 마우스 데이터
     int m_mouseRawX, m_mouseRawY;	// 고정밀 마우스 데이터
     RAWINPUTDEVICE m_Rid[1];		// 고정밀 마우스용
     bool m_mouseCaptured;

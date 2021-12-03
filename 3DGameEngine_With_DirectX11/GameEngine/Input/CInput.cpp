@@ -44,7 +44,10 @@ bool CInput::Init(HWND hwnd, bool capture) {
 		m_Rid[0].usUsage = HID_USAGE_GENERIC_MOUSE;
 		m_Rid[0].dwFlags = RIDEV_INPUTSINK;
 		m_Rid[0].hwndTarget = hwnd;
-		RegisterRawInputDevices(m_Rid, 1, sizeof(m_Rid[0]));
+		if (!RegisterRawInputDevices(m_Rid, 1, sizeof(RAWINPUTDEVICE)))
+		{
+			MessageBox(nullptr, L"RegisterRawInputDevices error", L"RegisterRawInputDevices", MB_OK);
+		}
 
 		if (m_mouseCaptured) {
 			SetCapture(hwnd);
@@ -159,16 +162,18 @@ void CInput::MouseIn(LPARAM lParam) {
 }
 
 void CInput::MouseRawIn(LPARAM lParam) {
-	UINT dwSize = 40;
-	static BYTE lpb[40];
+	/* 이 부분 RAWINPUT가 아니라 BYTE로 받으면 lastX,Y 데이터가 안 들어오는 점을 확인 */
+	RAWINPUT input;
+	memset(&input, 0, sizeof(input));
 
-	GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER));
+	UINT nSize = sizeof(RAWINPUT);
 
-	RAWINPUT* raw = (RAWINPUT*)lpb;
+	GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &input, &nSize, sizeof(RAWINPUTHEADER));
 
-	if (raw->header.dwType == RIM_TYPEMOUSE) {
-		m_mouseRawX = raw->data.mouse.lLastX;
-		m_mouseRawY = raw->data.mouse.lLastY;
+	if (input.header.dwType == RIM_TYPEMOUSE)
+	{
+		m_mouseRawX = input.data.mouse.lLastX;
+		m_mouseRawY = input.data.mouse.lLastY;
 	}
 }
 
