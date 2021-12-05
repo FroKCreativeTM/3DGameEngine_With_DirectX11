@@ -48,13 +48,15 @@ private:
 
 	// Input Assembler(이건 Shader.h에 있는 layout이 할꺼임) (Complete)
 	// VERTEX SHADER (Complete)
-	CVertexShader												m_pVertexShader;		// 버텍스 쉐이더를 다루는 변수
-	CVertexBuffer<Vertex>										m_pVertexBuffer;		// 버텍스에 들어갈 버퍼를 설정
-	CIndexBuffer												m_pIndexBuffer;			// 버퍼에 들어간 값들을 인덱싱해서 다루기 위한 버퍼
-	CConstantBuffer<CB_VS_VERTEXSHADER>							m_pConstBuffer;			// 상수 버퍼
+	CVertexShader												m_pVertexShader;			// 버텍스 쉐이더를 다루는 변수
+	CVertexBuffer<Vertex>										m_pVertexBuffer;			// 버텍스에 들어갈 버퍼를 설정
+	CIndexBuffer												m_pIndexBuffer;				// 버퍼에 들어간 값들을 인덱싱해서 다루기 위한 버퍼
+	CConstantBuffer<CB_VS_VERTEXSHADER>							m_pConstBufferVertexShader;	// 상수 버퍼
+	CConstantBuffer<CB_PS_PIXELSHADER>							m_pConstBufferPixelShader;	
 
 	// RESTERIZER(Complete)
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState>				m_pRasterizerState;
+	Microsoft::WRL::ComPtr<ID3D11BlendState>					m_pBlendState;
 	// PIXEL SHADER(Complete)
 	CPixelShader												m_pPixelShader;
 	// OUTPUT MERGER - OMSetRenderTargers(Complete)
@@ -72,5 +74,8 @@ private:
 	// 텍스처 관련 변수
 	Microsoft::WRL::ComPtr <ID3D11SamplerState>					m_pSamplerState;
 	Microsoft::WRL::ComPtr <ID3D11ShaderResourceView>			m_pTexture;
+	Microsoft::WRL::ComPtr <ID3D11ShaderResourceView>			m_pPinkTexture;
+	Microsoft::WRL::ComPtr <ID3D11ShaderResourceView>			m_pGrassTexture;
+	Microsoft::WRL::ComPtr <ID3D11ShaderResourceView>			m_pPavementTexture;
 };
 

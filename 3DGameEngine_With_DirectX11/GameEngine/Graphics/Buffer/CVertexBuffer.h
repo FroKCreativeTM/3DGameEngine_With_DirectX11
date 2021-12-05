@@ -44,7 +44,18 @@ public :
 
 	HRESULT Initialize(ID3D11Device* pDevice, T* data, UINT nVertices)
 	{
+		if (m_pBuffer.Get() != nullptr)
+		{
+			m_pBuffer.Reset();
+		}
+
 		this->m_bufferSize = nVertices;
+
+		if (m_pStride.get() == nullptr)
+		{
+			m_pStride = std::make_unique<UINT>(sizeof(T));
+		}
+
 		this->m_pStride = std::make_unique<UINT>(sizeof(T));
 
 		D3D11_BUFFER_DESC vertexBufferDesc;

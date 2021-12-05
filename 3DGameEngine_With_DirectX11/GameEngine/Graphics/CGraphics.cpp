@@ -155,6 +155,33 @@ bool CGraphics::initD3DApp(HWND hwnd)
 		return false;
 	}
 
+	// 블렌딩 상태 생성
+	D3D11_BLEND_DESC blendDesc;
+	ZeroMemory(&blendDesc, sizeof(blendDesc));
+
+	D3D11_RENDER_TARGET_BLEND_DESC rtbd;
+	ZeroMemory(&rtbd, sizeof(rtbd));
+
+	rtbd.BlendEnable = true;
+	// Final Blend = Src Blend * Src Blend Factor + Dst Blend * Dst Blend Factor
+	// Final Color = Src Pixel * Src Blend Factor + Dst Pixel * Dst Blend Factor
+	rtbd.SrcBlend = D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
+	rtbd.DestBlend = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
+	rtbd.BlendOp = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	rtbd.SrcBlendAlpha = D3D11_BLEND::D3D11_BLEND_ONE;
+	rtbd.DestBlendAlpha = D3D11_BLEND::D3D11_BLEND_ZERO;
+	rtbd.BlendOpAlpha = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	rtbd.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	blendDesc.RenderTarget[0] = rtbd;
+
+	hr = this->m_pDevice->CreateBlendState(&blendDesc, m_pBlendState.GetAddressOf());
+	if (FAILED(hr))
+	{
+		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initD3DApp() m_pDevice->CreateBlendState()"));
+		return false;
+	}
+
 	// 폰트에 대한 생성
 	m_pSpriteBatch = std::make_unique<DirectX::SpriteBatch>(this->m_pDeviceContext.Get());
 	m_pSpriteFont = std::make_unique<DirectX::SpriteFont>(this->m_pDevice.Get(), L"GameData\\Fonts\\comic_sans_ms_16.spritefont");
@@ -253,7 +280,7 @@ bool CGraphics::initializeScene()
 		return false;
 	}
 
-	hr = DirectX::CreateWICTextureFromFile(this->m_pDevice.Get(), 
+	hr = DirectX::CreateWICTextureFromFile(this->m_pDevice.Get(),
 		L"GameData\\Textures\\todd_texture.jpg",
 		nullptr,
 		m_pTexture.GetAddressOf());
@@ -264,8 +291,48 @@ bool CGraphics::initializeScene()
 		return false;
 	}
 
+	hr = DirectX::CreateWICTextureFromFile(this->m_pDevice.Get(),
+		L"GameData\\Textures\\pinksquare.jpg",
+		nullptr,
+		m_pPinkTexture.GetAddressOf());
+
+	if (FAILED(hr))
+	{
+		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() DirectX::CreateWICTextureFromFile()"));
+		return false;
+	}
+
+	hr = DirectX::CreateWICTextureFromFile(this->m_pDevice.Get(),
+		L"GameData\\Textures\\seamless_grass.jpg",
+		nullptr,
+		m_pGrassTexture.GetAddressOf());
+
+	if (FAILED(hr))
+	{
+		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() DirectX::CreateWICTextureFromFile()"));
+		return false;
+	}
+
+	hr = DirectX::CreateWICTextureFromFile(this->m_pDevice.Get(),
+		L"GameData\\Textures\\seamless_pavement.jpg",
+		nullptr,
+		m_pPavementTexture.GetAddressOf());
+
+	if (FAILED(hr))
+	{
+		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() DirectX::CreateWICTextureFromFile()"));
+		return false;
+	}
+
 	// 상수 버퍼를 초기화한다
-	hr = m_pConstBuffer.Initialize(this->m_pDevice.Get(), this->m_pDeviceContext.Get());
+	hr = m_pConstBufferVertexShader.Initialize(this->m_pDevice.Get(), this->m_pDeviceContext.Get());
+	if (FAILED(hr))
+	{
+		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() m_pConstBuffer.Initialize()"));
+		return false;
+	}
+
+	hr = m_pConstBufferPixelShader.Initialize(this->m_pDevice.Get(), this->m_pDeviceContext.Get());
 	if (FAILED(hr))
 	{
 		throw(CGameError(NSGameError::FATAL_ERROR, "Error CGraphics::initializeScene() m_pConstBuffer.Initialize()"));
@@ -339,6 +406,9 @@ void CGraphics::Render(float fDeltaTime)
 	// OM에 Depth/Stencil State를 적용한다.
 	this->m_pDeviceContext->OMSetDepthStencilState(this->m_pDepthStencilState.Get(), 0);
 
+	// OM에 블렌딩을 적용한다.
+	this->m_pDeviceContext->OMSetBlendState(this->m_pBlendState.Get(), NULL, 0xFFFFFFFF);
+
 	// 픽셀 쉐이더에 텍스처를 위한 샘플러 상태에 대해 넣는다. (이렇게 하면 쉐이더에 레지스터에 넣는다.)
 	this->m_pDeviceContext->PSSetSamplers(0, 1, this->m_pSamplerState.GetAddressOf());
 
@@ -354,30 +424,117 @@ void CGraphics::Render(float fDeltaTime)
 	// m_pConstBuffer.GetData().mat = DirectX::XMMatrixScaling(0.5f, 0.5f, 0.5f);
 	// m_pConstBuffer.GetData().mat = DirectX::XMMatrixTranspose(m_pConstBuffer.GetData().mat);	// 여기까지 하면 row_major
 
-	static float translationOffset[3] = { 0,0,0 };
+	{	// 벽지
+		static float translationOffset[3] = { 0,0, 4.0 };
 
-	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(translationOffset[0],
-		translationOffset[1],
-		translationOffset[2]);
+		DirectX::XMMATRIX worldMatrix = XMMatrixScaling(5.0f, 5.0f, 5.0f) *
+			DirectX::XMMatrixTranslation(translationOffset[0],
+				translationOffset[1],
+				translationOffset[2]);
 
-	// view와 projection은 카메라가 설정해준다.
-	m_pConstBuffer.GetData().mat = worldMatrix *
-		GET_SINGLE(CCamera)->GetViewMatrix() * GET_SINGLE(CCamera)->GetProjectionMatrix();
-	m_pConstBuffer.GetData().mat = DirectX::XMMatrixTranspose(m_pConstBuffer.GetData().mat);
-	if (!m_pConstBuffer.ApplyChanges())
-	{
-		return;
+		// 정점 상수 버퍼
+		// view와 projection은 카메라가 설정해준다.
+		m_pConstBufferVertexShader.GetData().mat = worldMatrix *
+			GET_SINGLE(CCamera)->GetViewMatrix() * GET_SINGLE(CCamera)->GetProjectionMatrix();
+		m_pConstBufferVertexShader.GetData().mat = DirectX::XMMatrixTranspose(m_pConstBufferVertexShader.GetData().mat);
+		if (!m_pConstBufferVertexShader.ApplyChanges())
+		{
+			return;
+		}
+		m_pDeviceContext->VSSetConstantBuffers(0, 1, m_pConstBufferVertexShader.GetAddressOf());
+
+		// 픽셀 상수 버퍼
+		m_pConstBufferPixelShader.GetData().alpha = 1.0f;
+		if (!m_pConstBufferPixelShader.ApplyChanges())
+		{
+			return;
+		}
+		m_pDeviceContext->PSSetConstantBuffers(0, 1, m_pConstBufferPixelShader.GetAddressOf());
+
+		// 사각형
+		this->m_pDeviceContext->PSSetShaderResources(0, 1, m_pPavementTexture.GetAddressOf());
+		this->m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), m_pVertexBuffer.GetStridePtr(), &offset);
+		// (인덱스 버퍼 이용)
+		this->m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		// 다음 적용된 설정에 따라서 데이터를 그린다.
+		// 인덱스 버퍼에 있는 데이터에 맞춰 그린다.
+		this->m_pDeviceContext->DrawIndexed(m_pIndexBuffer.GetBufferSize(), 0, 0);
 	}
-	m_pDeviceContext->VSSetConstantBuffers(0, 1, m_pConstBuffer.GetAddressOf());
 
-	// 사각형
-	this->m_pDeviceContext->PSSetShaderResources(0, 1, m_pTexture.GetAddressOf());
-	this->m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), m_pVertexBuffer.GetStridePtr(), &offset);
-	// (인덱스 버퍼 이용)
-	this->m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-	// 다음 적용된 설정에 따라서 데이터를 그린다.
-	// 인덱스 버퍼에 있는 데이터에 맞춰 그린다.
-	this->m_pDeviceContext->DrawIndexed(m_pIndexBuffer.GetBufferSize(), 0, 0);
+	static float alpha = 1.0f;
+	{	// 핑크
+		static float translationOffset[3] = { 0,0, -1 };
+
+		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(translationOffset[0],
+			translationOffset[1],
+			translationOffset[2]);
+
+		// 정점 상수 버퍼
+		// view와 projection은 카메라가 설정해준다.
+		m_pConstBufferVertexShader.GetData().mat = worldMatrix *
+			GET_SINGLE(CCamera)->GetViewMatrix() * GET_SINGLE(CCamera)->GetProjectionMatrix();
+		m_pConstBufferVertexShader.GetData().mat = DirectX::XMMatrixTranspose(m_pConstBufferVertexShader.GetData().mat);
+		if (!m_pConstBufferVertexShader.ApplyChanges())
+		{
+			return;
+		}
+		m_pDeviceContext->VSSetConstantBuffers(0, 1, m_pConstBufferVertexShader.GetAddressOf());
+
+		// 픽셀 상수 버퍼
+		m_pConstBufferPixelShader.GetData().alpha = alpha;
+		if (!m_pConstBufferPixelShader.ApplyChanges())
+		{
+			return;
+		}
+		m_pDeviceContext->PSSetConstantBuffers(0, 1, m_pConstBufferPixelShader.GetAddressOf());
+
+		// 사각형
+		this->m_pDeviceContext->PSSetShaderResources(0, 1, m_pPinkTexture.GetAddressOf());
+		this->m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), m_pVertexBuffer.GetStridePtr(), &offset);
+		// (인덱스 버퍼 이용)
+		this->m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		// 다음 적용된 설정에 따라서 데이터를 그린다.
+		// 인덱스 버퍼에 있는 데이터에 맞춰 그린다.
+		this->m_pDeviceContext->DrawIndexed(m_pIndexBuffer.GetBufferSize(), 0, 0);
+	}
+
+
+	{	// 풀
+		static float translationOffset[3] = { 0,0,0 };
+
+		DirectX::XMMATRIX worldMatrix = XMMatrixScaling(5.0f, 5.0f, 5.0f) *
+			DirectX::XMMatrixTranslation(translationOffset[0],
+				translationOffset[1],
+				translationOffset[2]);
+
+		// 정점 상수 버퍼
+		// view와 projection은 카메라가 설정해준다.
+		m_pConstBufferVertexShader.GetData().mat = worldMatrix *
+			GET_SINGLE(CCamera)->GetViewMatrix() * GET_SINGLE(CCamera)->GetProjectionMatrix();
+		m_pConstBufferVertexShader.GetData().mat = DirectX::XMMatrixTranspose(m_pConstBufferVertexShader.GetData().mat);
+		if (!m_pConstBufferVertexShader.ApplyChanges())
+		{
+			return;
+		}
+		m_pDeviceContext->VSSetConstantBuffers(0, 1, m_pConstBufferVertexShader.GetAddressOf());
+
+		// 픽셀 상수 버퍼
+		m_pConstBufferPixelShader.GetData().alpha = 1.0f;
+		if (!m_pConstBufferPixelShader.ApplyChanges())
+		{
+			return;
+		}
+		m_pDeviceContext->PSSetConstantBuffers(0, 1, m_pConstBufferPixelShader.GetAddressOf());
+
+		// 사각형
+		this->m_pDeviceContext->PSSetShaderResources(0, 1, m_pGrassTexture.GetAddressOf());
+		this->m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), m_pVertexBuffer.GetStridePtr(), &offset);
+		// (인덱스 버퍼 이용)
+		this->m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		// 다음 적용된 설정에 따라서 데이터를 그린다.
+		// 인덱스 버퍼에 있는 데이터에 맞춰 그린다.
+		this->m_pDeviceContext->DrawIndexed(m_pIndexBuffer.GetBufferSize(), 0, 0);
+	}
 
 	// 폰트를 그린다.
 	m_pSpriteBatch->Begin();
@@ -405,7 +562,8 @@ void CGraphics::Render(float fDeltaTime)
 	//std::string clickCount = "Click Count : " + std::to_string(cnt);
 	//ImGui::Text(clickCount.c_str());
 
-	ImGui::DragFloat3("Translation X/Y/Z", translationOffset, 0.1f, -5.0f, 5.0f);
+	// ImGui::DragFloat3("Translation X/Y/Z", translationOffset, 0.1f, -5.0f, 5.0f);
+	ImGui::DragFloat("Alpha", &alpha, 0.1f, 0.0f, 1.0f);
 
 	ImGui::End();
 
