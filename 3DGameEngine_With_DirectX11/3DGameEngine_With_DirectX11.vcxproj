@@ -152,6 +152,12 @@
     <ClCompile Include="GameEngine\CCore.cpp" />
     <ClCompile Include="GameEngine\Graphics\CAdapterReader.cpp" />
     <ClCompile Include="GameEngine\Graphics\CGraphics.cpp" />
+    <ClCompile Include="GameEngine\Graphics\ImGui\imgui.cpp" />
+    <ClCompile Include="GameEngine\Graphics\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="GameEngine\Graphics\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="GameEngine\Graphics\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="GameEngine\Graphics\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="GameEngine\Graphics\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="GameEngine\Graphics\Shader\CShaders.cpp" />
     <ClCompile Include="GameEngine\Input\CInput.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -172,6 +178,14 @@
     <ClInclude Include="GameEngine\Graphics\Buffer\CVertexBuffer.h" />
     <ClInclude Include="GameEngine\Graphics\CAdapterReader.h" />
     <ClInclude Include="GameEngine\Graphics\CGraphics.h" />
+    <ClInclude Include="GameEngine\Graphics\ImGui\imconfig.h" />
+    <ClInclude Include="GameEngine\Graphics\ImGui\imgui.h" />
+    <ClInclude Include="GameEngine\Graphics\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="GameEngine\Graphics\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="GameEngine\Graphics\ImGui\imgui_internal.h" />
+    <ClInclude Include="GameEngine\Graphics\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="GameEngine\Graphics\ImGui\imstb_textedit.h" />
+    <ClInclude Include="GameEngine\Graphics\ImGui\imstb_truetype.h" />
     <ClInclude Include="GameEngine\Graphics\Shader\CShaders.h" />
     <ClInclude Include="GameEngine\Input\CInput.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

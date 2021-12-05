@@ -307,6 +307,15 @@ bool CGraphics::Initialize(HWND hwnd, int width, int height)
 		return false;
 	}
 
+	// ImGui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+
+	ImGui_ImplWin32_Init(hwnd);
+	ImGui_ImplDX11_Init(m_pDevice.Get(), m_pDeviceContext.Get());
+	ImGui::StyleColorsDark();
+
 	return true;
 }
 
@@ -345,7 +354,11 @@ void CGraphics::Render(float fDeltaTime)
 	// m_pConstBuffer.GetData().mat = DirectX::XMMatrixScaling(0.5f, 0.5f, 0.5f);
 	// m_pConstBuffer.GetData().mat = DirectX::XMMatrixTranspose(m_pConstBuffer.GetData().mat);	// 여기까지 하면 row_major
 
-	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
+	static float translationOffset[3] = { 0,0,0 };
+
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(translationOffset[0],
+		translationOffset[1],
+		translationOffset[2]);
 
 	// view와 projection은 카메라가 설정해준다.
 	m_pConstBuffer.GetData().mat = worldMatrix *
@@ -371,6 +384,36 @@ void CGraphics::Render(float fDeltaTime)
 	m_pSpriteFont->DrawString(m_pSpriteBatch.get(), L"Hello World", DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::Colors::White, 
 		0.0f, DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f));
 	m_pSpriteBatch->End();
+
+	// ImGui 프레임 렌더링
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+
+	ImGui::NewFrame();
+
+	// ImGui 테스트 윈도우 생성
+	ImGui::Begin("Test");
+
+	ImGui::Text("This is an example Text.");
+	//static int cnt = 0;
+	// 버튼
+	//if (ImGui::Button("Click this!"))
+	//{
+	//	cnt++;
+	//}
+	// ImGui::SameLine();
+	//std::string clickCount = "Click Count : " + std::to_string(cnt);
+	//ImGui::Text(clickCount.c_str());
+
+	ImGui::DragFloat3("Translation X/Y/Z", translationOffset, 0.1f, -5.0f, 5.0f);
+
+	ImGui::End();
+
+	// 만든 모든 프레임을 합쳐서 렌더링한다.
+	ImGui::Render();
+	
+	// 그릴 데이터를 렌더링한다.
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	// 그리고 이를 스왑 체인에 적용한다.
 	this->m_pSwapChain->Present(1, NULL);

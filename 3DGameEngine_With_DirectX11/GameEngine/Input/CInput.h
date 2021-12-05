@@ -102,17 +102,8 @@ public:
     int  GetMouseX() { return m_mouseX; }
     int  GetMouseY() { return m_mouseY; }
 
-    int  GetMouseRawX() {
-        int rawX = m_mouseRawX;
-        m_mouseRawX = 0;
-        return rawX;
-    }
-
-    int  GetMouseRawY() {
-        int rawY = m_mouseRawY;
-        m_mouseRawY = 0;
-        return rawY;
-    }
+    int  GetMouseRawX() { return m_mouseRawX; }
+    int  GetMouseRawY() { return m_mouseRawY; }
 
     int  GetMouseWheel() {
         int wheel = m_mouseWheel;

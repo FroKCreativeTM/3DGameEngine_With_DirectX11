@@ -43,6 +43,9 @@
     <Filter Include="01. GameEngine\06. Camera">
       <UniqueIdentifier>{64088aa3-f173-485a-8cd6-366e15200c54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. GameEngine\02. Graphics\03. ImGui">
+      <UniqueIdentifier>{56eeec85-b7a0-452c-9502-9984e497a10a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -71,6 +74,24 @@
     </ClCompile>
     <ClCompile Include="GameEngine\Camera\CCamera.cpp">
       <Filter>01. GameEngine\06. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Graphics\ImGui\imgui.cpp">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Graphics\ImGui\imgui_draw.cpp">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Graphics\ImGui\imgui_tables.cpp">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Graphics\ImGui\imgui_widgets.cpp">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Graphics\ImGui\imgui_impl_dx11.cpp">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Graphics\ImGui\imgui_impl_win32.cpp">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +148,30 @@
     </ClInclude>
     <ClInclude Include="GameEngine\Camera\CCamera.h">
       <Filter>01. GameEngine\06. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\ImGui\imconfig.h">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\ImGui\imgui.h">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\ImGui\imgui_internal.h">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\ImGui\imstb_rectpack.h">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\ImGui\imstb_textedit.h">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\ImGui\imstb_truetype.h">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\ImGui\imgui_impl_dx11.h">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Graphics\ImGui\imgui_impl_win32.h">
+      <Filter>01. GameEngine\02. Graphics\03. ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

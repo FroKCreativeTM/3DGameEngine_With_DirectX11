@@ -51,6 +51,7 @@ void CTimer::Update()
 #ifdef _DEBUG
 		char strFPS[64] = {};
 		sprintf_s(strFPS, "FPS : %.f\n", m_fFPS);
+		printf("FPS : %.f\n", m_fFPS);
 		SetWindowTextA(m_hWnd, strFPS);
 		// 디버그 콘솔에 프린팅한다.
 		OutputDebugStringA(strFPS);

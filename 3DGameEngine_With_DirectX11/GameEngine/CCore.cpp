@@ -97,8 +97,16 @@ int CCore::Run()
     return (int)msg.wParam;
 }
 
+// 이것이 있어야 ImGui를 Handling할 수 있음.
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+
 LRESULT CCore::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+    {
+        return true;
+    }
+
     switch (message)
     {
     case WM_DESTROY:
@@ -234,26 +242,26 @@ void CCore::Input(float fDeltaTime)
 {
     if (GET_SINGLE(CInput)->GetMouseRButton())
     {
-        GET_SINGLE(CCamera)->AdjustRotation((float)GET_SINGLE(CInput)->GetMouseRawY() * 0.01f,
-            (float)GET_SINGLE(CInput)->GetMouseRawX() * 0.01f, 0);
+        GET_SINGLE(CCamera)->AdjustRotation((float)GET_SINGLE(CInput)->GetMouseRawY() * fDeltaTime,
+            (float)GET_SINGLE(CInput)->GetMouseRawX() * fDeltaTime, 0);
     }
     const float CAMERA_SPEED = 0.02f;
 
     if (GET_SINGLE(CInput)->IsKeyDown('W'))
     {
-        GET_SINGLE(CCamera)->AdjustPosition(GET_SINGLE(CCamera)->GetForwardVector() * CAMERA_SPEED);
+        GET_SINGLE(CCamera)->AdjustPosition(GET_SINGLE(CCamera)->GetForwardVector() * fDeltaTime);
     }
     if (GET_SINGLE(CInput)->IsKeyDown('S'))
     {
-        GET_SINGLE(CCamera)->AdjustPosition(GET_SINGLE(CCamera)->GetBackwardVector() * CAMERA_SPEED);
+        GET_SINGLE(CCamera)->AdjustPosition(GET_SINGLE(CCamera)->GetBackwardVector() * fDeltaTime);
     }
     if (GET_SINGLE(CInput)->IsKeyDown('A'))
     {
-        GET_SINGLE(CCamera)->AdjustPosition(GET_SINGLE(CCamera)->GetLeftVector() * CAMERA_SPEED);
+        GET_SINGLE(CCamera)->AdjustPosition(GET_SINGLE(CCamera)->GetLeftVector() * fDeltaTime);
     }
     if (GET_SINGLE(CInput)->IsKeyDown('D'))
     {
-        GET_SINGLE(CCamera)->AdjustPosition(GET_SINGLE(CCamera)->GetRightVector() * CAMERA_SPEED);
+        GET_SINGLE(CCamera)->AdjustPosition(GET_SINGLE(CCamera)->GetRightVector() * fDeltaTime);
     }
     if (GET_SINGLE(CInput)->IsKeyDown(VK_SPACE))
     {
